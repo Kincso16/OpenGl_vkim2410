@@ -65,6 +65,8 @@ namespace Szeminarium1
             uint vshader = Gl.CreateShader(ShaderType.VertexShader);
             uint fshader = Gl.CreateShader(ShaderType.FragmentShader);
 
+       
+
             Gl.ShaderSource(vshader, VertexShaderSource);
             Gl.CompileShader(vshader);
             Gl.GetShader(vshader, ShaderParameterName.CompileStatus, out int vStatus);
@@ -100,6 +102,7 @@ namespace Szeminarium1
 
         private static unsafe void GraphicWindow_Render(double deltaTime)
         {
+            //gl
             //Console.WriteLine($"Render after {deltaTime} [s]");
 
             Gl.Clear(ClearBufferMask.ColorBufferBit);
@@ -131,18 +134,22 @@ namespace Szeminarium1
             Gl.BufferData(GLEnum.ArrayBuffer, (ReadOnlySpan<float>)vertexArray.AsSpan(), GLEnum.StaticDraw);
             Gl.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, null);
             Gl.EnableVertexAttribArray(0);
+            Gl.BindBuffer(GLEnum.ArrayBuffer, 0);
 
             uint colors = Gl.GenBuffer();
             Gl.BindBuffer(GLEnum.ArrayBuffer, colors);
             Gl.BufferData(GLEnum.ArrayBuffer, (ReadOnlySpan<float>)colorArray.AsSpan(), GLEnum.StaticDraw);
             Gl.VertexAttribPointer(1, 4, VertexAttribPointerType.Float, false, 0, null);
             Gl.EnableVertexAttribArray(1);
+            Gl.BindBuffer(GLEnum.ArrayBuffer, 0);
 
             uint indices = Gl.GenBuffer();
             Gl.BindBuffer(GLEnum.ElementArrayBuffer, indices);
             Gl.BufferData(GLEnum.ElementArrayBuffer, (ReadOnlySpan<uint>)indexArray.AsSpan(), GLEnum.StaticDraw);
 
             Gl.BindBuffer(GLEnum.ArrayBuffer, 0);
+
+
 
             Gl.UseProgram(program);
             

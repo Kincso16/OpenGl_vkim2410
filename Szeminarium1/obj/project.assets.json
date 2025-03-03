@@ -1,7 +1,7 @@
 {
   "version": 3,
   "targets": {
-    "net8.0": {
+    "net7.0": {
       "Microsoft.CSharp/4.7.0": {
         "type": "package",
         "compile": {
@@ -31,12 +31,12 @@
           "System.Text.Json": "8.0.0"
         },
         "compile": {
-          "lib/net8.0/Microsoft.Extensions.DependencyModel.dll": {
+          "lib/net7.0/Microsoft.Extensions.DependencyModel.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net8.0/Microsoft.Extensions.DependencyModel.dll": {
+          "lib/net7.0/Microsoft.Extensions.DependencyModel.dll": {
             "related": ".xml"
           }
         },
@@ -57,7 +57,7 @@
           "Silk.NET.Windowing": "2.20.0"
         }
       },
-      "Silk.NET.Core/2.20.0": {
+      "Silk.NET.Core/2.22.0": {
         "type": "package",
         "dependencies": {
           "Microsoft.CSharp": "4.7.0",
@@ -78,11 +78,11 @@
           }
         }
       },
-      "Silk.NET.GLFW/2.20.0": {
+      "Silk.NET.GLFW/2.22.0": {
         "type": "package",
         "dependencies": {
-          "Silk.NET.Core": "2.20.0",
-          "Ultz.Native.GLFW": "3.3.9.2"
+          "Silk.NET.Core": "2.22.0",
+          "Ultz.Native.GLFW": "3.4.0"
         },
         "compile": {
           "lib/net5.0/Silk.NET.GLFW.dll": {
@@ -153,7 +153,7 @@
           }
         }
       },
-      "Silk.NET.Maths/2.20.0": {
+      "Silk.NET.Maths/2.22.0": {
         "type": "package",
         "compile": {
           "lib/net5.0/Silk.NET.Maths.dll": {
@@ -184,11 +184,11 @@
           }
         }
       },
-      "Silk.NET.OpenGL/2.20.0": {
+      "Silk.NET.OpenGL/2.22.0": {
         "type": "package",
         "dependencies": {
-          "Silk.NET.Core": "2.20.0",
-          "Silk.NET.Maths": "2.20.0"
+          "Silk.NET.Core": "2.22.0",
+          "Silk.NET.Maths": "2.22.0"
         },
         "compile": {
           "lib/net5.0/Silk.NET.OpenGL.dll": {
@@ -255,18 +255,18 @@
           }
         }
       },
-      "Silk.NET.Windowing/2.20.0": {
+      "Silk.NET.Windowing/2.22.0": {
         "type": "package",
         "dependencies": {
-          "Silk.NET.Windowing.Common": "2.20.0",
-          "Silk.NET.Windowing.Glfw": "2.20.0"
+          "Silk.NET.Windowing.Common": "2.22.0",
+          "Silk.NET.Windowing.Glfw": "2.22.0"
         }
       },
-      "Silk.NET.Windowing.Common/2.20.0": {
+      "Silk.NET.Windowing.Common/2.22.0": {
         "type": "package",
         "dependencies": {
-          "Silk.NET.Core": "2.20.0",
-          "Silk.NET.Maths": "2.20.0"
+          "Silk.NET.Core": "2.22.0",
+          "Silk.NET.Maths": "2.22.0"
         },
         "compile": {
           "lib/netstandard2.1/Silk.NET.Windowing.Common.dll": {
@@ -279,11 +279,11 @@
           }
         }
       },
-      "Silk.NET.Windowing.Glfw/2.20.0": {
+      "Silk.NET.Windowing.Glfw/2.22.0": {
         "type": "package",
         "dependencies": {
-          "Silk.NET.GLFW": "2.20.0",
-          "Silk.NET.Windowing.Common": "2.20.0"
+          "Silk.NET.GLFW": "2.22.0",
+          "Silk.NET.Windowing.Common": "2.22.0"
         },
         "compile": {
           "lib/net5.0/Silk.NET.Windowing.Glfw.dll": {
@@ -359,12 +359,12 @@
       "System.Text.Encodings.Web/8.0.0": {
         "type": "package",
         "compile": {
-          "lib/net8.0/System.Text.Encodings.Web.dll": {
+          "lib/net7.0/System.Text.Encodings.Web.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net8.0/System.Text.Encodings.Web.dll": {
+          "lib/net7.0/System.Text.Encodings.Web.dll": {
             "related": ".xml"
           }
         },
@@ -372,7 +372,7 @@
           "buildTransitive/net6.0/_._": {}
         },
         "runtimeTargets": {
-          "runtimes/browser/lib/net8.0/System.Text.Encodings.Web.dll": {
+          "runtimes/browser/lib/net7.0/System.Text.Encodings.Web.dll": {
             "assetType": "runtime",
             "rid": "browser"
           }
@@ -384,12 +384,12 @@
           "System.Text.Encodings.Web": "8.0.0"
         },
         "compile": {
-          "lib/net8.0/System.Text.Json.dll": {
+          "lib/net7.0/System.Text.Json.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net8.0/System.Text.Json.dll": {
+          "lib/net7.0/System.Text.Json.dll": {
             "related": ".xml"
           }
         },
@@ -397,7 +397,7 @@
           "buildTransitive/net6.0/System.Text.Json.targets": {}
         }
       },
-      "Ultz.Native.GLFW/3.3.9.2": {
+      "Ultz.Native.GLFW/3.4.0": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/_._": {}
@@ -406,6 +406,14 @@
           "lib/netstandard2.0/_._": {}
         },
         "runtimeTargets": {
+          "runtimes/linux-arm/native/libglfw.so.3": {
+            "assetType": "native",
+            "rid": "linux-arm"
+          },
+          "runtimes/linux-arm64/native/libglfw.so.3": {
+            "assetType": "native",
+            "rid": "linux-arm64"
+          },
           "runtimes/linux-x64/native/libglfw.so.3": {
             "assetType": "native",
             "rid": "linux-x64"
@@ -621,10 +629,10 @@
         "silkdotnet_v3.png"
       ]
     },
-    "Silk.NET.Core/2.20.0": {
-      "sha512": "vin8fW0bUBD3hDbN3s3br+ePtAzzdOCygslGfb7JR86ZKVQ/fAsgLcKQLDbNjZAn020F4eUEg/UNEZqpBwhOcg==",
+    "Silk.NET.Core/2.22.0": {
+      "sha512": "XbDilPmvsQIrvxZkeVCNNX3LyRtA3hN6UykAiyZjlu/JkYh68U3WQummpP+j7jsxlX8s/pOrrU3vbN8LnMl0VA==",
       "type": "package",
-      "path": "silk.net.core/2.20.0",
+      "path": "silk.net.core/2.22.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -639,15 +647,15 @@
         "lib/netstandard2.0/Silk.NET.Core.xml",
         "lib/netstandard2.1/Silk.NET.Core.dll",
         "lib/netstandard2.1/Silk.NET.Core.xml",
-        "silk.net.core.2.20.0.nupkg.sha512",
+        "silk.net.core.2.22.0.nupkg.sha512",
         "silk.net.core.nuspec",
         "silkdotnet_v3.png"
       ]
     },
-    "Silk.NET.GLFW/2.20.0": {
-      "sha512": "VCnaHew1xH+j0AxS54zVQNLQ4HJAaTpIFQdPpmMzbJ3XB21zNPV/5MBGhz4PyBgXKEHezjT6NPkYOerbzHqkfA==",
+    "Silk.NET.GLFW/2.22.0": {
+      "sha512": "I1u6CmwwtD+5OIHditbMBVHRQUHZWhfW3Z38mvydxwkZpAvjs5BCxyen6ecOVpbYD6I0EOjZ42M3IsaZbwiYUg==",
       "type": "package",
-      "path": "silk.net.glfw/2.20.0",
+      "path": "silk.net.glfw/2.22.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -660,7 +668,7 @@
         "lib/netstandard2.0/Silk.NET.GLFW.xml",
         "lib/netstandard2.1/Silk.NET.GLFW.dll",
         "lib/netstandard2.1/Silk.NET.GLFW.xml",
-        "silk.net.glfw.2.20.0.nupkg.sha512",
+        "silk.net.glfw.2.22.0.nupkg.sha512",
         "silk.net.glfw.nuspec",
         "silkdotnet_v3.png"
       ]
@@ -741,10 +749,10 @@
         "silkdotnet_v3.png"
       ]
     },
-    "Silk.NET.Maths/2.20.0": {
-      "sha512": "m9QxEPE6Y/m7AXTTKBbuy53Proi8k+HlvYa5x/UKbhcAbursIFFOJS8tVfCpRdZ3QGTfKBFlfifzJhByal8Vjw==",
+    "Silk.NET.Maths/2.22.0": {
+      "sha512": "W9b5UlUGCu5Ywb5f8ZyIWJ475ucY+mT/nEiSTo3JH098VxHaZS/02bYr9f29VWBaJhh3DwMkfxQvgTyXzTrHyw==",
       "type": "package",
-      "path": "silk.net.maths/2.20.0",
+      "path": "silk.net.maths/2.22.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -761,7 +769,7 @@
         "lib/netstandard2.0/Silk.NET.Maths.xml",
         "lib/netstandard2.1/Silk.NET.Maths.dll",
         "lib/netstandard2.1/Silk.NET.Maths.xml",
-        "silk.net.maths.2.20.0.nupkg.sha512",
+        "silk.net.maths.2.22.0.nupkg.sha512",
         "silk.net.maths.nuspec",
         "silkdotnet_v3.png"
       ]
@@ -787,10 +795,10 @@
         "silkdotnet_v3.png"
       ]
     },
-    "Silk.NET.OpenGL/2.20.0": {
-      "sha512": "VMeNmTCBmMGGnVu3hvc8QvQdUqU4W98ca5p75lLlxJF4YvJqNIPPVAbPWs65oAdoi5FT4UoOl9CS3i89VTPxEA==",
+    "Silk.NET.OpenGL/2.22.0": {
+      "sha512": "AmbtflPvaGWw7fHEHrcFTd54OTAj0bemzx4WV2ELJdW2NBPSvtyz31nhyuBVTml20+NtW4Z3yhDGUpM6uouVDQ==",
       "type": "package",
-      "path": "silk.net.opengl/2.20.0",
+      "path": "silk.net.opengl/2.22.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -803,7 +811,7 @@
         "lib/netstandard2.0/Silk.NET.OpenGL.xml",
         "lib/netstandard2.1/Silk.NET.OpenGL.dll",
         "lib/netstandard2.1/Silk.NET.OpenGL.xml",
-        "silk.net.opengl.2.20.0.nupkg.sha512",
+        "silk.net.opengl.2.22.0.nupkg.sha512",
         "silk.net.opengl.nuspec",
         "silkdotnet_v3.png"
       ]
@@ -880,23 +888,23 @@
         "silkdotnet_v3.png"
       ]
     },
-    "Silk.NET.Windowing/2.20.0": {
-      "sha512": "49WVTjv9gOWH5tvw/QkDvjCkzj7Mwzp/kc7eXGdAnw7tygcAYithqPnmtnpHryZzs1tOfQzcQiX0cha/IYNhmA==",
+    "Silk.NET.Windowing/2.22.0": {
+      "sha512": "yKGe/8REdm+T43LdtfUpFUx9eQARwx6wTmEoJ2bANVGQPCvWYC2Qi1+haT6n63dyNIX+iJWKg4++F4TFjg0/Fw==",
       "type": "package",
-      "path": "silk.net.windowing/2.20.0",
+      "path": "silk.net.windowing/2.22.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "README.md",
-        "silk.net.windowing.2.20.0.nupkg.sha512",
+        "silk.net.windowing.2.22.0.nupkg.sha512",
         "silk.net.windowing.nuspec",
         "silkdotnet_v3.png"
       ]
     },
-    "Silk.NET.Windowing.Common/2.20.0": {
-      "sha512": "ZsF5ddWPkQhwAlSBz2PetaBUO64u+pVAP9bOb2oGZlEHp0iH+NxfEN/zswcUntE2Dm9yHB8bdmwVD82MEOwj6Q==",
+    "Silk.NET.Windowing.Common/2.22.0": {
+      "sha512": "ynasHSQ4jGrmpn/07UagE3qVNRLzWvg+fbM8uHI0d5LF95y++Kuno42QLkP/UEruC1YovI+NRhMfGJy0gDQaZg==",
       "type": "package",
-      "path": "silk.net.windowing.common/2.20.0",
+      "path": "silk.net.windowing.common/2.22.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -905,15 +913,15 @@
         "lib/netstandard2.0/Silk.NET.Windowing.Common.xml",
         "lib/netstandard2.1/Silk.NET.Windowing.Common.dll",
         "lib/netstandard2.1/Silk.NET.Windowing.Common.xml",
-        "silk.net.windowing.common.2.20.0.nupkg.sha512",
+        "silk.net.windowing.common.2.22.0.nupkg.sha512",
         "silk.net.windowing.common.nuspec",
         "silkdotnet_v3.png"
       ]
     },
-    "Silk.NET.Windowing.Glfw/2.20.0": {
-      "sha512": "6w6QvdAyxeQcaLWqNOrT2juHJD0VAxSdI8Iwx9t5NuaPvJmf5VuVL2JN7zY9bQY2wUpOIEho/b6RoKwbfg5ekw==",
+    "Silk.NET.Windowing.Glfw/2.22.0": {
+      "sha512": "hBNxNSLvx/jdfvbU6oCsXcgLfqf9hMlEc6Mq/rllJ0eUTLloacuOZHTM8V702QGf7hOR+Mo4bTFqTqBnC0CM7g==",
       "type": "package",
-      "path": "silk.net.windowing.glfw/2.20.0",
+      "path": "silk.net.windowing.glfw/2.22.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -926,7 +934,7 @@
         "lib/netstandard2.0/Silk.NET.Windowing.Glfw.xml",
         "lib/netstandard2.1/Silk.NET.Windowing.Glfw.dll",
         "lib/netstandard2.1/Silk.NET.Windowing.Glfw.xml",
-        "silk.net.windowing.glfw.2.20.0.nupkg.sha512",
+        "silk.net.windowing.glfw.2.22.0.nupkg.sha512",
         "silk.net.windowing.glfw.nuspec",
         "silkdotnet_v3.png"
       ]
@@ -1196,10 +1204,10 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "Ultz.Native.GLFW/3.3.9.2": {
-      "sha512": "4b7gJEfMZcw207CZkFV3VUBagmHlX9jYVkk1mrzacnAOgr90JoZSILTEFPc5lz5LT7yFKxQnsnqqIsFnVO7k/Q==",
+    "Ultz.Native.GLFW/3.4.0": {
+      "sha512": "Iy22JopynbOJ32vA0lBhFEzGi65GQJBuJHYBYRBpydrDpNoTiHnjIXfA65Gu+8qsOr/ZEoIF8r9aHCgAXuO6DA==",
       "type": "package",
-      "path": "ultz.native.glfw/3.3.9.2",
+      "path": "ultz.native.glfw/3.4.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -1207,6 +1215,8 @@
         "build/net461/Ultz.Native.GLFW.targets",
         "lib/net461/_._",
         "lib/netstandard2.0/_._",
+        "runtimes/linux-arm/native/libglfw.so.3",
+        "runtimes/linux-arm64/native/libglfw.so.3",
         "runtimes/linux-x64/native/libglfw.so.3",
         "runtimes/osx-arm64/native/libglfw.3.dylib",
         "runtimes/osx-x64/native/libglfw.3.dylib",
@@ -1214,7 +1224,7 @@
         "runtimes/win-x64/native/glfw3.dll",
         "runtimes/win-x86/native/glfw3.dll",
         "silkdotnet_v3.png",
-        "ultz.native.glfw.3.3.9.2.nupkg.sha512",
+        "ultz.native.glfw.3.4.0.nupkg.sha512",
         "ultz.native.glfw.nuspec"
       ]
     },
@@ -1247,49 +1257,38 @@
     }
   },
   "projectFileDependencyGroups": {
-    "net8.0": [
-      "Silk.NET >= 2.20.0"
+    "net7.0": [
+      "Silk.NET >= 2.20.0",
+      "Silk.NET.OpenGL >= 2.22.0",
+      "Silk.NET.Windowing >= 2.22.0"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\kolum\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\varga\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Koli\\Munka\\BBTE\\Tantargyak\\Grafika (MLM5060)\\Kodok\\Grafika-MLM5060\\Szeminarium1\\Szeminarium1\\Szeminarium1.csproj",
+      "projectUniqueName": "C:\\Users\\varga\\OneDrive\\Desktop\\Grafika\\OpenGl_vkim2410\\Szeminarium1\\Szeminarium1.csproj",
       "projectName": "Szeminarium1",
-      "projectPath": "D:\\Koli\\Munka\\BBTE\\Tantargyak\\Grafika (MLM5060)\\Kodok\\Grafika-MLM5060\\Szeminarium1\\Szeminarium1\\Szeminarium1.csproj",
-      "packagesPath": "C:\\Users\\kolum\\.nuget\\packages\\",
-      "outputPath": "D:\\Koli\\Munka\\BBTE\\Tantargyak\\Grafika (MLM5060)\\Kodok\\Grafika-MLM5060\\Szeminarium1\\Szeminarium1\\obj\\",
+      "projectPath": "C:\\Users\\varga\\OneDrive\\Desktop\\Grafika\\OpenGl_vkim2410\\Szeminarium1\\Szeminarium1.csproj",
+      "packagesPath": "C:\\Users\\varga\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\varga\\OneDrive\\Desktop\\Grafika\\OpenGl_vkim2410\\Szeminarium1\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\kolum\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\varga\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
-        "net8.0"
+        "net7.0"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
-        "C:\\Users\\kolum\\.nuget\\repository": {},
-        "https://api.nuget.org/v3/index.json": {},
-        "https://nexus.kilgray.com/repository/kilgray-nuget-dev-sandbox/": {},
-        "https://nexus.kilgray.com/repository/kilgray-private-nuget-release/": {},
-        "https://nexus.kilgray.com/repository/kilgray-private-nuget-snapshot/": {},
-        "https://nexus.kilgray.com/repository/memoq-nuget-debug/": {},
-        "https://nexus.kilgray.com/repository/memoq-nuget-release/": {},
-        "https://nexus.kilgray.com/repository/memoq-nuget-sandbox/": {}
+        "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net8.0": {
-          "targetAlias": "net8.0",
+        "net7.0": {
+          "targetAlias": "net7.0",
           "projectReferences": {}
         }
       },
@@ -1300,12 +1299,20 @@
       }
     },
     "frameworks": {
-      "net8.0": {
-        "targetAlias": "net8.0",
+      "net7.0": {
+        "targetAlias": "net7.0",
         "dependencies": {
           "Silk.NET": {
             "target": "Package",
             "version": "[2.20.0, )"
+          },
+          "Silk.NET.OpenGL": {
+            "target": "Package",
+            "version": "[2.22.0, )"
+          },
+          "Silk.NET.Windowing": {
+            "target": "Package",
+            "version": "[2.22.0, )"
           }
         },
         "imports": [
@@ -1324,7 +1331,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
       }
     }
   }
