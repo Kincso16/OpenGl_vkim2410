@@ -116,22 +116,53 @@ namespace Szeminarium1
             Gl.BindVertexArray(vao);
 
             float[] vertexArray = new float[] {
-                -0.5f, -0.5f, 0.0f,
-                +0.5f, -0.5f, 0.0f,
-                 0.0f, +0.7f, 0.0f,
-                 1f, 1f, 0f
+                // Left face 
+                -1f, -0.5f, 0.0f,  
+                0.0f,  0.0f, 0.0f,  
+                -1f,  0.5f, 0.0f,  
+                -1f, 0.0f, 0.0f,  
+                
+                // Right face 
+                1f, -0.5f, 0.0f,  
+                1.5f, 0.0f, 0.0f, 
+                1f,  0.5f, 0.0f,  
+                0.5f, 0.0f, 0.0f, 
+
+                // Top face 
+                0.0f,  0.5f, 0.0f,  
+                0.5f,  0.25f, 0.0f, 
+                0.0f,  0.0f, 0.0f,  
+                -0.5f,  0.25f, 0.0f   
+    
             };
 
             float[] colorArray = new float[] {
+                //(Red)
                 1.0f, 0.0f, 0.0f, 1.0f,
+                1.0f, 0.0f, 0.0f, 1.0f,
+                1.0f, 0.0f, 0.0f, 1.0f,
+                1.0f, 0.0f, 0.0f, 1.0f,
+        
+                //(Green)
                 0.0f, 1.0f, 0.0f, 1.0f,
+                0.0f, 1.0f, 0.0f, 1.0f,
+                0.0f, 1.0f, 0.0f, 1.0f,
+                0.0f, 1.0f, 0.0f, 1.0f,
+        
+                //(Blue)
                 0.0f, 0.0f, 1.0f, 1.0f,
-                1.0f, 0.0f, 0.0f, 1.0f,
+                0.0f, 0.0f, 1.0f, 1.0f,
+                0.0f, 0.0f, 1.0f, 1.0f,
+                0.0f, 0.0f, 1.0f, 1.0f
             };
 
-            uint[] indexArray = new uint[] { 
-                0, 1, 2,
-                2, 1, 3
+            uint[] indexArray = new uint[] {
+                0, 1, 2, 
+                2, 3, 0,   // Left face
+                4, 5, 6,  
+                6, 7, 4,   // Right face
+                8, 9, 10,
+                10, 11, 8   // Top face
             };
 
             uint vertices = Gl.GenBuffer();
