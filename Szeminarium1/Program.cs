@@ -82,7 +82,7 @@ namespace Szeminarium1
 
 
             program = Gl.CreateProgram();
-            Gl.AttachShader(program, vshader);
+            //Gl.AttachShader(program, vshader);
             Gl.AttachShader(program, fshader);
             Gl.LinkProgram(program);
             Gl.DetachShader(program, vshader);
@@ -151,7 +151,7 @@ namespace Szeminarium1
             Gl.BindBuffer(GLEnum.ArrayBuffer, colors);
             Gl.BufferData(GLEnum.ArrayBuffer, (ReadOnlySpan<float>)colorArray.AsSpan(), GLEnum.StaticDraw);
             Gl.VertexAttribPointer(1, 4, VertexAttribPointerType.Float, false, 0, null);
-            Gl.EnableVertexAttribArray(0);
+            Gl.EnableVertexAttribArray(1);
             //Gl.BindBuffer(GLEnum.ArrayBuffer, 0);
 
             var error2 = Gl.GetError();
