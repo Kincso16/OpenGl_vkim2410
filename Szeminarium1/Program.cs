@@ -119,20 +119,20 @@ namespace Szeminarium1
                 // Left face 
                 0.0f, -0.65f, 0.0f,   //bottom
                 0.0f,  0.0f, 0.0f,    //mid right
-                -0.5f,  0.25f, 0.0f,  //top
-                -0.5f, -0.4f, 0.0f,      //mid left
+                -0.5f,  0.3f, 0.0f,  //top
+                -0.5f, -0.35f, 0.0f,      //mid left
                 
                 // Right face 
                 0f, -0.65f, 0.0f, // bottom
-                0.5f, -0.4f, 0.0f, //mid right 
-                0.5f,  0.25f, 0.0f,    //top
+                0.5f, -0.35f, 0.0f, //mid right 
+                0.5f,  0.3f, 0.0f,    //top
                 0.0f, 0.0f, 0.0f,   //mid left
 
                 // Top face 
-                0.0f,  0.5f, 0.0f,   //top
-                0.5f,  0.25f, 0.0f,  //mid right
+                0.0f,  0.6f, 0.0f,   //top
+                0.5f,  0.3f, 0.0f,  //mid right
                 0.0f,  0.0f, 0.0f,   //bottom
-                -0.5f,  0.25f, 0.0f  //mid left
+                -0.5f,  0.3f, 0.0f  //mid left
     
             };
 
