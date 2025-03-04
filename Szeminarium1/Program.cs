@@ -75,6 +75,11 @@ namespace Szeminarium1
 
             Gl.ShaderSource(fshader, FragmentShaderSource);
             Gl.CompileShader(fshader);
+            Gl.GetShader(fshader, ShaderParameterName.CompileStatus, out int fStatus);
+            if (fStatus != (int)GLEnum.True)
+                throw new Exception("Fragment shader failed to compile: " + Gl.GetShaderInfoLog(fshader));
+
+
 
             program = Gl.CreateProgram();
             Gl.AttachShader(program, vshader);
@@ -132,27 +137,47 @@ namespace Szeminarium1
             uint vertices = Gl.GenBuffer();
             Gl.BindBuffer(GLEnum.ArrayBuffer, vertices);
             Gl.BufferData(GLEnum.ArrayBuffer, (ReadOnlySpan<float>)vertexArray.AsSpan(), GLEnum.StaticDraw);
-            Gl.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, null);
+            Gl.VertexAttribPointer(0, 4, VertexAttribPointerType.Float, false, 0, null);
             Gl.EnableVertexAttribArray(0);
-            Gl.BindBuffer(GLEnum.ArrayBuffer, 0);
+            //Gl.BindBuffer(GLEnum.ArrayBuffer, 0);
+
+            var error1 = Gl.GetError();
+            if (error1 != GLEnum.NoError)
+            {
+                Console.WriteLine($"OpenGL Error ({"vertex atribute setup"}): {error1}");
+            }
 
             uint colors = Gl.GenBuffer();
             Gl.BindBuffer(GLEnum.ArrayBuffer, colors);
             Gl.BufferData(GLEnum.ArrayBuffer, (ReadOnlySpan<float>)colorArray.AsSpan(), GLEnum.StaticDraw);
             Gl.VertexAttribPointer(1, 4, VertexAttribPointerType.Float, false, 0, null);
             Gl.EnableVertexAttribArray(1);
-            Gl.BindBuffer(GLEnum.ArrayBuffer, 0);
+            //Gl.BindBuffer(GLEnum.ArrayBuffer, 0);
+
+            var error2 = Gl.GetError();
+            if (error2 != GLEnum.NoError)
+            {
+                Console.WriteLine($"OpenGL Error ({"color attribute setup"}): {error2}");
+            }
 
             uint indices = Gl.GenBuffer();
             Gl.BindBuffer(GLEnum.ElementArrayBuffer, indices);
             Gl.BufferData(GLEnum.ElementArrayBuffer, (ReadOnlySpan<uint>)indexArray.AsSpan(), GLEnum.StaticDraw);
+            //Gl.BindBuffer(GLEnum.ArrayBuffer, 0);
 
-            Gl.BindBuffer(GLEnum.ArrayBuffer, 0);
-
-
+            var error3 = Gl.GetError();
+            if (error3 != GLEnum.NoError)
+            {
+                Console.WriteLine($"OpenGL Error ({"index buffer setup"}): {error3}");
+            }
 
             Gl.UseProgram(program);
-            
+            var error = Gl.GetError();
+            if (error != GLEnum.NoError)
+            {
+                Console.WriteLine($"OpenGL Error ({"using shader program"}): {error}");
+            }
+
             Gl.DrawElements(GLEnum.Triangles, (uint)indexArray.Length, GLEnum.UnsignedInt, null); // we used element buffer
             Gl.BindBuffer(GLEnum.ElementArrayBuffer, 0);
             Gl.BindVertexArray(vao);
