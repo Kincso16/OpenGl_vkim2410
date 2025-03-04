@@ -116,7 +116,7 @@ namespace Szeminarium1
             Gl.BindVertexArray(vao);
 
             float[] vertexArray = new float[] {
-                -0.5f, -0.5f, 0.0f,
+                -1f, -1f, 0.0f,
                 +0.5f, -0.5f, 0.0f,
                  0.0f, +0.7f, 0.0f,
                  1f, 1f, 0f
@@ -151,7 +151,7 @@ namespace Szeminarium1
             Gl.BindBuffer(GLEnum.ArrayBuffer, colors);
             Gl.BufferData(GLEnum.ArrayBuffer, (ReadOnlySpan<float>)colorArray.AsSpan(), GLEnum.StaticDraw);
             Gl.VertexAttribPointer(1, 4, VertexAttribPointerType.Float, false, 0, null);
-            //Gl.EnableVertexAttribArray(1);
+            Gl.EnableVertexAttribArray(1);
             //Gl.BindBuffer(GLEnum.ArrayBuffer, 0);
 
             var error2 = Gl.GetError();
