@@ -117,22 +117,22 @@ namespace Szeminarium1
 
             float[] vertexArray = new float[] {
                 // Left face 
-                -1f, -0.5f, 0.0f,  
-                0.0f,  0.0f, 0.0f,  
-                -1f,  0.5f, 0.0f,  
-                -1f, 0.0f, 0.0f,  
+                0.0f, -0.65f, 0.0f,   //bottom
+                0.0f,  0.0f, 0.0f,    //mid right
+                -0.5f,  0.25f, 0.0f,  //top
+                -0.5f, -0.4f, 0.0f,      //mid left
                 
                 // Right face 
-                1f, -0.5f, 0.0f,  
-                1.5f, 0.0f, 0.0f, 
-                1f,  0.5f, 0.0f,  
-                0.5f, 0.0f, 0.0f, 
+                0f, -0.65f, 0.0f, // bottom
+                0.5f, -0.4f, 0.0f, //mid right 
+                0.5f,  0.25f, 0.0f,    //top
+                0.0f, 0.0f, 0.0f,   //mid left
 
                 // Top face 
-                0.0f,  0.5f, 0.0f,  
-                0.5f,  0.25f, 0.0f, 
-                0.0f,  0.0f, 0.0f,  
-                -0.5f,  0.25f, 0.0f   
+                0.0f,  0.5f, 0.0f,   //top
+                0.5f,  0.25f, 0.0f,  //mid right
+                0.0f,  0.0f, 0.0f,   //bottom
+                -0.5f,  0.25f, 0.0f  //mid left
     
             };
 
@@ -157,12 +157,15 @@ namespace Szeminarium1
             };
 
             uint[] indexArray = new uint[] {
+                // Left face
                 0, 1, 2, 
-                2, 3, 0,   // Left face
+                2, 3, 0,   
+                // Right face
                 4, 5, 6,  
-                6, 7, 4,   // Right face
+                6, 7, 4,   
+                // Top face
                 8, 9, 10,
-                10, 11, 8   // Top face
+                10, 11, 8  
             };
 
             uint vertices = Gl.GenBuffer();
