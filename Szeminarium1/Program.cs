@@ -274,7 +274,7 @@ namespace Szeminarium1
             };
 
             float[] colorArray = new float[] {
-                //(blue)2
+                //(Blue)2
                 0.0f, 0.0f, 1.0f, 1.0f,
                 0.0f, 0.0f, 1.0f, 1.0f,
                 0.0f, 0.0f, 1.0f, 1.0f,
