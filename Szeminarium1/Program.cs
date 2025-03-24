@@ -183,22 +183,41 @@ namespace GrafikaSzeminarium
             SetMatrix(projectionMatrix, ProjectionMatrixVariableName);
 
 
-            var modelMatrixCenterCube = Matrix4X4.CreateScale((float)cubeArrangementModel.CenterCubeScale);
-            SetMatrix(modelMatrixCenterCube, ModelMatrixVariableName);
-            DrawModelObject(cube);
+            float scaleFactor = 0.3f;
+            float spacing = 0.4f; // Smaller spacing between cubes
 
-            Matrix4X4<float> diamondScale = Matrix4X4.CreateScale(0.25f);
-            Matrix4X4<float> rotx = Matrix4X4.CreateRotationX((float)Math.PI / 4f);
-            Matrix4X4<float> rotz = Matrix4X4.CreateRotationZ((float)Math.PI / 4f);
-            Matrix4X4<float> roty = Matrix4X4.CreateRotationY((float)cubeArrangementModel.DiamondCubeLocalAngle);
-            Matrix4X4<float> trans = Matrix4X4.CreateTranslation(1f, 1f, 0f);
-            Matrix4X4<float> rotGlobalY = Matrix4X4.CreateRotationY((float)cubeArrangementModel.DiamondCubeGlobalYAngle);
-            
-            Matrix4X4<float> dimondCubeModelMatrix = diamondScale * rotx * rotz * roty * trans * rotGlobalY;
+            for (int x = -1; x <= 1; x++)
+            {
+                for (int y = -1; y <= 1; y++)
+                {
+                    for (int z = -1; z <= 1; z++)
+                    {
+                        Matrix4X4<float> scale = Matrix4X4.CreateScale(scaleFactor);
+                        Matrix4X4<float> translation = Matrix4X4.CreateTranslation(
+                            x * spacing, y * spacing, z * spacing);
 
-            SetMatrix(dimondCubeModelMatrix, ModelMatrixVariableName);
-            DrawModelObject(cube);
+                        Matrix4X4<float> rotation = GetRotationMatrixForCube(x, y, z);
 
+                        Matrix4X4<float> modelMatrix = scale * rotation * translation;
+                        SetMatrix(modelMatrix, ModelMatrixVariableName);
+
+                        DrawModelObject(cube);
+                    }
+                }
+            }
+
+        }
+        private static Matrix4X4<float> GetRotationMatrixForCube(int x, int y, int z)
+        {
+            Matrix4X4<float> rotation = Matrix4X4<float>.Identity;
+
+            if (y == 1)
+                rotation *= Matrix4X4.CreateRotationY((float)cubeArrangementModel.DiamondCubeGlobalYAngle);
+
+            if (z == 1)
+                rotation *= Matrix4X4.CreateRotationX((float)cubeArrangementModel.DiamondCubeLocalAngle);
+
+            return rotation;
         }
 
         private static unsafe void DrawModelObject(ModelObjectDescriptor modelObject)
