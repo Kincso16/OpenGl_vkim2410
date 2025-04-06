@@ -1,92 +1,89 @@
-﻿
+﻿using Silk.NET.Input;
+using System.Numerics;
 using Silk.NET.Maths;
 
-namespace Szeminarium
+namespace GrafikaSzeminarium
 {
     internal class CameraDescriptor
     {
-        public double DistanceToOrigin { get; private set; } = 1;
-
-        public double AngleToZYPlane { get; private set; } = 0;
-
-        public double AngleToZXPlane { get; private set; } = 0;
-
-        const double DistanceScaleFactor = 1.1;
-
-        const double AngleChangeStepSize = Math.PI / 180 * 5;
-
-        /// <summary>
-        /// Gets the position of the camera.
-        /// </summary>
-        public Vector3D<float> Position
+        //Setup the camera's location, directions, and movement speed
+        private static Vector3D<float> CameraPosition = new Vector3D<float>(0.0f, 0.0f, 8.0f);
+        private static Vector3D<float> CameraFront = new Vector3D<float>(0.0f, 0.0f, -1.0f);
+        private static Vector3D<float> CameraUp = Vector3D<float>.UnitY;
+        private static Vector3D<float> CameraDirection = Vector3D<float>.Zero;
+        private static float CameraYaw = -90f;
+        private static float CameraPitch = 0f;
+        private static float CameraZoom = 45f;
+        //Used to track change in mouse movement to allow for moving of the Camera
+        private static Vector2 LastMousePosition;
+        private static float DegreesToRadians(float degrees)
         {
-            get
+            return MathF.PI / 180f * degrees;
+        }
+        public unsafe void LookAtMouse(IMouse mouse, Vector2 position)
+        {
+            var lookSensitivity = 0.1f;
+            if (LastMousePosition == default) { LastMousePosition = position; }
+            else
             {
-                return GetPointFromAngles(DistanceToOrigin, AngleToZYPlane, AngleToZXPlane);
+                var xOffset = (position.X - LastMousePosition.X) * lookSensitivity;
+                var yOffset = (position.Y - LastMousePosition.Y) * lookSensitivity;
+                LastMousePosition = position;
+
+                CameraYaw += xOffset;
+                CameraPitch -= yOffset;
+
+                //We don't want to be able to look behind us by going over our head or under our feet so make sure it stays within these bounds
+                CameraPitch = Math.Clamp(CameraPitch, -89.0f, 89.0f);
+
+                CameraDirection.X = MathF.Cos(DegreesToRadians(CameraYaw)) * MathF.Cos(DegreesToRadians(CameraPitch));
+                CameraDirection.Y = MathF.Sin(DegreesToRadians(CameraPitch));
+                CameraDirection.Z = MathF.Sin(DegreesToRadians(CameraYaw)) * MathF.Cos(DegreesToRadians(CameraPitch));
+                CameraFront = Vector3D.Normalize(CameraDirection);
+
             }
         }
-
-        /// <summary>
-        /// Gets the up vector of the camera.
-        /// </summary>
-        public Vector3D<float> UpVector
+        public unsafe void ZoomMouseWheel(IMouse mouse, ScrollWheel scrollWheel)
         {
-            get
-            {
-                return Vector3D.Normalize(GetPointFromAngles(DistanceToOrigin, AngleToZYPlane, AngleToZXPlane + Math.PI / 2));
-            }
+            //We don't want to be able to zoom in too close or too far away so clamp to these values
+            CameraZoom = Math.Clamp(CameraZoom - scrollWheel.Y, 1.0f, 45f);
+        }
+        public Matrix4X4<float> getView()
+        {
+            return Matrix4X4.CreateLookAt<float>(CameraPosition, CameraPosition + CameraFront, CameraUp);
+        }
+        public Matrix4X4<float> getProjection(Vector2D<int> size)
+        {
+            return Matrix4X4.CreatePerspectiveFieldOfView(DegreesToRadians(CameraZoom), (float)size.X / size.Y, 0.1f, 100.0f);
+        }
+        public void MoveUp(float moveSpeed)
+        {
+            CameraPosition += moveSpeed * CameraUp;
         }
 
-        /// <summary>
-        /// Gets the target point of the camera view.
-        /// </summary>
-        public Vector3D<float> Target
+        public void MoveDown(float moveSpeed)
         {
-            get
-            {
-                // For the moment the camera is always pointed at the origin.
-                return Vector3D<float>.Zero;
-            }
+            CameraPosition -= moveSpeed * CameraUp;
         }
 
-        public void IncreaseZXAngle()
+        public void MoveRight(float moveSpeed)
         {
-            AngleToZXPlane += AngleChangeStepSize;
+            CameraPosition += Vector3D.Normalize(Vector3D.Cross(CameraFront, CameraUp)) * moveSpeed;
         }
 
-        public void DecreaseZXAngle()
+        public void MoveLeft(float moveSpeed)
         {
-            AngleToZXPlane -= AngleChangeStepSize;
+            CameraPosition -= Vector3D.Normalize(Vector3D.Cross(CameraFront, CameraUp)) * moveSpeed;
         }
 
-        public void IncreaseZYAngle()
+        public void MoveForward(float moveSpeed)
         {
-            AngleToZYPlane += AngleChangeStepSize;
-
+            CameraPosition += moveSpeed * CameraFront;
         }
 
-        public void DecreaseZYAngle()
+        public void MoveBackward(float moveSpeed)
         {
-            AngleToZYPlane -= AngleChangeStepSize;
-        }
-
-        public void IncreaseDistance()
-        {
-            DistanceToOrigin = DistanceToOrigin * DistanceScaleFactor;
-        }
-
-        public void DecreaseDistance()
-        {
-            DistanceToOrigin = DistanceToOrigin / DistanceScaleFactor;
-        }
-
-        private static Vector3D<float> GetPointFromAngles(double distanceToOrigin, double angleToMinZYPlane, double angleToMinZXPlane)
-        {
-            var x = distanceToOrigin * Math.Cos(angleToMinZXPlane) * Math.Sin(angleToMinZYPlane);
-            var z = distanceToOrigin * Math.Cos(angleToMinZXPlane) * Math.Cos(angleToMinZYPlane);
-            var y = distanceToOrigin * Math.Sin(angleToMinZXPlane);
-
-            return new Vector3D<float>((float)x, (float)y, (float)z);
+            CameraPosition -= moveSpeed * CameraFront;
         }
     }
 }
