@@ -95,12 +95,6 @@ namespace GrafikaSzeminarium
                 primaryKeyboard.KeyDown += Keyboard_KeyDown;
             }
 
-            for (int i = 0; i < inputContext.Mice.Count; i++)
-            {
-                inputContext.Mice[i].Cursor.CursorMode = CursorMode.Raw;
-                inputContext.Mice[i].MouseMove += OnMouseMove;
-            }
-
             Gl = window.CreateOpenGL();
             Gl.ClearColor(System.Drawing.Color.White);
 
@@ -112,11 +106,6 @@ namespace GrafikaSzeminarium
 
             Gl.Enable(EnableCap.DepthTest);
             Gl.DepthFunc(DepthFunction.Lequal);
-        }
-
-        private static unsafe void OnMouseMove(IMouse mouse, Vector2 position)
-        {
-            cameraDescriptor.LookAtMouse(mouse, position);
         }
 
         private static void LinkProgram()
@@ -156,96 +145,76 @@ namespace GrafikaSzeminarium
                 case Key.Space:
                     cubeArrangementModel.AnimationEnabeld = !cubeArrangementModel.AnimationEnabeld;
                     break;
-                case Key.Q:
-                    RotateSide('q');
-                    break;
-                case Key.W:
-                    RotateSide('w');
-                    break;
             }
         }
 
-        private static unsafe void RotateSide(char key)
-        {
-            int nul = -10;
-            int x = nul, y = nul, z = nul;
-            int clockwise = 0;
-            switch (key)
-            {
-                case 'q':
-                    y = 1;
-                    break;
-                case 'w':
-                    y = 1;
-                    break;
-            }
-            if ("q".Contains(key))
-            {
-                clockwise = 1;
-            }
-            else
-            {
-                clockwise = -1;
-            }
-            List<GlCube> rotCubes = new List<GlCube>();
-            foreach (GlCube cube in glCubes)
-            {
-                if (y != nul && cube.Translation[1] == y && cube.CurrentRotateY == 0)
-                {
-                    rotCubes.Add(cube);
-                }
-            }
-            foreach (GlCube cube in rotCubes)
-            {
-                //Console.WriteLine("x=" + cube.Translation[0] + " , y=" + cube.Translation[1] + " , z=" + cube.Translation[2]);
-                cube.CurrentRotateY = clockwise;
-            }
-
-        }
 
         private static void Window_Update(double deltaTime)
         {
-            //Console.WriteLine($"Update after {deltaTime} [s].");
+            // Console.WriteLine($"Update after {deltaTime} [s].");
             // multithreaded
             // make sure it is threadsafe
             // NO GL calls
 
             var moveSpeed = 2.5f * (float)deltaTime;
 
-            if (primaryKeyboard.IsKeyPressed(Key.Up))
+            // Camera Movement
+            if (primaryKeyboard.IsKeyPressed(Key.F))
             {
-                //Move forwards
+                // Move forwards
                 cameraDescriptor.MoveForward(moveSpeed);
-
             }
-            if (primaryKeyboard.IsKeyPressed(Key.Down))
+            if (primaryKeyboard.IsKeyPressed(Key.B))
             {
-                //Move backwards
+                // Move backwards
                 cameraDescriptor.MoveBackward(moveSpeed);
             }
             if (primaryKeyboard.IsKeyPressed(Key.Left))
             {
-                //Move left
+                // Move left
                 cameraDescriptor.MoveLeft(moveSpeed);
             }
             if (primaryKeyboard.IsKeyPressed(Key.Right))
             {
-                //Move right
+                // Move right
                 cameraDescriptor.MoveRight(moveSpeed);
             }
-            if (primaryKeyboard.IsKeyPressed(Key.Tab))
+            if (primaryKeyboard.IsKeyPressed(Key.Up))
             {
-                //Move up
+                // Move up
                 cameraDescriptor.MoveUp(moveSpeed);
             }
-            if (primaryKeyboard.IsKeyPressed(Key.ShiftLeft))
+            if (primaryKeyboard.IsKeyPressed(Key.Down))
             {
-                //Move down
+                // Move down
                 cameraDescriptor.MoveDown(moveSpeed);
             }
+            if (primaryKeyboard.IsKeyPressed(Key.W))
+            {
+                // Look up (tilt upwards)
+                cameraDescriptor.LookUp(1.0f); 
+            }
+            if (primaryKeyboard.IsKeyPressed(Key.S))
+            {
+                // Look down (tilt downwards)
+                cameraDescriptor.LookDown(1.0f); 
+            }
 
+            if (primaryKeyboard.IsKeyPressed(Key.A))
+            {
+                // Tilt left (rotate left)
+                cameraDescriptor.LookLeft(1.0f); 
+            }
+            if (primaryKeyboard.IsKeyPressed(Key.D))
+            {
+                // Tilt right (rotate right)
+                cameraDescriptor.LookRight(1.0f); 
+            }
+
+            // Advance time for cube animation or other updates
             cubeArrangementModel.AdvanceTime(deltaTime);
         }
+
 
         private static unsafe void Window_Render(double deltaTime)
         {
@@ -266,7 +235,6 @@ namespace GrafikaSzeminarium
         }
         private static unsafe void DrawGLCubes()
         {
-            //            Console.WriteLine("Drawing");
             Vector3D<float> zeroPoint = new Vector3D<float>(0.0f, 0.0f, 0.0f);
             foreach (GlCube glCube in glCubes)
             {
@@ -297,7 +265,6 @@ namespace GrafikaSzeminarium
 
                 }
                 Matrix4X4<float> modelMatrix = scale * trans * rotateInAngleY * workInRotatetingY;
-                //Matrix4X4<float> modelMatrix = scale * rotGlobY * trans;
                 SetModelMatrix(modelMatrix);
                 Gl.BindVertexArray(glCube.Vao);
                 Gl.DrawElements(GLEnum.Triangles, glCube.IndexArrayLength, GLEnum.UnsignedInt, null);
@@ -322,139 +289,118 @@ namespace GrafikaSzeminarium
         {
             glCubes = new List<GlCube>();
 
-            float[] TOP_COLOR = [0.95f, 0.95f, 0.95f, 1.0f];   // TOP
-            float[] FRONT_COLOR = [1.0f, 0.0f, 0.0f, 1.0f];      // FRONT
+            float[] TOP_COLOR = [0.95f, 0.95f, 0.95f, 1.0f];    // TOP
+            float[] FRONT_COLOR = [1.0f, 0.0f, 0.0f, 1.0f];     // FRONT
             float[] LEFT_COLOR = [0.0f, 1.0f, 0.0f, 1.0f];      // LEFT
             float[] DOWN_COLOR = [1.0f, 1.0f, 0.0f, 1.0f];      // DOWN
             float[] BACK_COLOR = [1.0f, 0.6f, 0.0f, 1.0f];      // BACK
-            float[] RIGHT_COLOR = [0.3f, 0.52f, 0.91f, 1.0f];      // RIGHT
+            float[] RIGHT_COLOR = [0.3f, 0.52f, 0.91f, 1.0f];   // RIGHT
             float[] BLACK_COLOR = [0f, 0f, 0f, 1.0f];
 
-            //            GlCube glCube = GlCube.CreateCubeWithFaceColors(Gl, TOP_COLOR, FRONT_COLOR, LEFT_COLOR, DOWN_COLOR, BACK_COLOR, RIGHT_COLOR, translation);
-
-
-            //-------------------------------------------------------------------------------------------------------------------
-            //------------------------------------------------------ BOTTOM -----------------------------------------------------
-            //-------------------------------------------------------------------------------------------------------------------
-
-
-            //------------------------------------------------ BOTTOM FRONT LEFT ------------------------------------------------
+            //BOTTOM FRONT LEFT
             float[] translation = [-1f, -1f, 1f];
             glCubes.Add(GlCube.CreateCubeWithFaceColors(Gl, BLACK_COLOR, FRONT_COLOR, LEFT_COLOR, DOWN_COLOR, BLACK_COLOR, BLACK_COLOR, translation));
 
-            //------------------------------------------------ BOTTOM FRONT MIDDLE ------------------------------------------------
+            //BOTTOM FRONT MIDDLE 
             translation = [0f, -1f, 1f];
             glCubes.Add(GlCube.CreateCubeWithFaceColors(Gl, BLACK_COLOR, FRONT_COLOR, BLACK_COLOR, DOWN_COLOR, BLACK_COLOR, BLACK_COLOR, translation));
 
-            //------------------------------------------------ BOTTOM FRONT RIGHT ------------------------------------------------
+            //BOTTOM FRONT RIGHT 
             translation = [1f, -1f, 1f];
             glCubes.Add(GlCube.CreateCubeWithFaceColors(Gl, BLACK_COLOR, FRONT_COLOR, BLACK_COLOR, DOWN_COLOR, BLACK_COLOR, RIGHT_COLOR, translation));
 
-            //------------------------------------------------ BOTTOM MIDDLE LEFT ------------------------------------------------
+            //BOTTOM MIDDLE LEFT
             translation = [-1f, -1f, 0f];
             glCubes.Add(GlCube.CreateCubeWithFaceColors(Gl, BLACK_COLOR, BLACK_COLOR, LEFT_COLOR, DOWN_COLOR, BLACK_COLOR, BLACK_COLOR, translation));
 
-            //------------------------------------------------ BOTTOM MIDDLE MIDDLE ------------------------------------------------
+            //BOTTOM MIDDLE MIDDLE
             translation = [0f, -1f, 0f];
             glCubes.Add(GlCube.CreateCubeWithFaceColors(Gl, BLACK_COLOR, BLACK_COLOR, BLACK_COLOR, DOWN_COLOR, BLACK_COLOR, BLACK_COLOR, translation));
 
-            //------------------------------------------------ BOTTOM MIDDLE RIGHT ------------------------------------------------
+            //BOTTOM MIDDLE RIGHT
             translation = [1f, -1f, 0f];
             glCubes.Add(GlCube.CreateCubeWithFaceColors(Gl, BLACK_COLOR, BLACK_COLOR, BLACK_COLOR, DOWN_COLOR, BLACK_COLOR, RIGHT_COLOR, translation));
 
-            //------------------------------------------------ BOTTOM BACK LEFT ------------------------------------------------
+            //BOTTOM BACK LEFT
             translation = [-1f, -1f, -1f];
             glCubes.Add(GlCube.CreateCubeWithFaceColors(Gl, BLACK_COLOR, BLACK_COLOR, LEFT_COLOR, DOWN_COLOR, BACK_COLOR, BLACK_COLOR, translation));
 
-            //------------------------------------------------ BOTTOM BACK MIDDLE ------------------------------------------------
+            //BOTTOM BACK MIDDLE
             translation = [0f, -1f, -1f];
             glCubes.Add(GlCube.CreateCubeWithFaceColors(Gl, BLACK_COLOR, BLACK_COLOR, BLACK_COLOR, DOWN_COLOR, BACK_COLOR, BLACK_COLOR, translation));
 
-            //------------------------------------------------ BOTTOM BACK RIGHT ------------------------------------------------
+            //BOTTOM BACK RIGHT
             translation = [1f, -1f, -1f];
             glCubes.Add(GlCube.CreateCubeWithFaceColors(Gl, BLACK_COLOR, BLACK_COLOR, BLACK_COLOR, DOWN_COLOR, BACK_COLOR, RIGHT_COLOR, translation));
 
-
-            //-------------------------------------------------------------------------------------------------------------------
-            //------------------------------------------------------ MIDDLE -----------------------------------------------------
-            //-------------------------------------------------------------------------------------------------------------------
-
-
-            //------------------------------------------------ MIDDLE FRONT LEFT ------------------------------------------------
+            //MIDDLE FRONT LEFT
             translation = [-1f, 0f, 1f];
             glCubes.Add(GlCube.CreateCubeWithFaceColors(Gl, BLACK_COLOR, FRONT_COLOR, LEFT_COLOR, BLACK_COLOR, BLACK_COLOR, BLACK_COLOR, translation));
 
-            //------------------------------------------------ MIDDLE FRONT MIDDLE ------------------------------------------------
+            //MIDDLE FRONT MIDDLE
             translation = [0f, 0f, 1f];
             glCubes.Add(GlCube.CreateCubeWithFaceColors(Gl, BLACK_COLOR, FRONT_COLOR, BLACK_COLOR, BLACK_COLOR, BLACK_COLOR, BLACK_COLOR, translation));
 
-            //------------------------------------------------ MIDDLE FRONT RIGHT ------------------------------------------------
+            //MIDDLE FRONT RIGHT
             translation = [1f, 0f, 1f];
             glCubes.Add(GlCube.CreateCubeWithFaceColors(Gl, BLACK_COLOR, FRONT_COLOR, BLACK_COLOR, BLACK_COLOR, BLACK_COLOR, RIGHT_COLOR, translation));
 
-            //------------------------------------------------ MIDDLE MIDDLE LEFT ------------------------------------------------
+            //MIDDLE MIDDLE LEFT
             translation = [-1f, 0f, 0f];
             glCubes.Add(GlCube.CreateCubeWithFaceColors(Gl, BLACK_COLOR, BLACK_COLOR, LEFT_COLOR, BLACK_COLOR, BLACK_COLOR, BLACK_COLOR, translation));
 
-            //------------------------------------------------ MIDDLE MIDDLE RIGHT ------------------------------------------------
+            //MIDDLE MIDDLE RIGHT 
             translation = [1f, 0f, 0f];
             glCubes.Add(GlCube.CreateCubeWithFaceColors(Gl, BLACK_COLOR, BLACK_COLOR, BLACK_COLOR, BLACK_COLOR, BLACK_COLOR, RIGHT_COLOR, translation));
 
-            //------------------------------------------------ MIDDLE BACK LEFT ------------------------------------------------
+            //MIDDLE BACK LEFT 
             translation = [-1f, 0f, -1f];
             glCubes.Add(GlCube.CreateCubeWithFaceColors(Gl, BLACK_COLOR, BLACK_COLOR, LEFT_COLOR, BLACK_COLOR, BACK_COLOR, BLACK_COLOR, translation));
 
-            //------------------------------------------------ MIDDLE BACK MIDDLE ------------------------------------------------
+            //MIDDLE BACK MIDDLE
             translation = [0f, 0f, -1f];
             glCubes.Add(GlCube.CreateCubeWithFaceColors(Gl, BLACK_COLOR, BLACK_COLOR, BLACK_COLOR, BLACK_COLOR, BACK_COLOR, BLACK_COLOR, translation));
 
-            //------------------------------------------------ MIDDLE BACK RIGHT ------------------------------------------------
+            // MIDDLE BACK RIGHT
             translation = [1f, 0f, -1f];
             glCubes.Add(GlCube.CreateCubeWithFaceColors(Gl, BLACK_COLOR, BLACK_COLOR, BLACK_COLOR, BLACK_COLOR, BACK_COLOR, RIGHT_COLOR, translation));
 
-
-            //-------------------------------------------------------------------------------------------------------------------
-            //------------------------------------------------------ TOP---------------------------------------------------------
-            //-------------------------------------------------------------------------------------------------------------------
-
-
-            //------------------------------------------------ TOP FRONT LEFT ------------------------------------------------
+            //TOP FRONT LEFT
             translation = [-1f, 1f, 1f];
             glCubes.Add(GlCube.CreateCubeWithFaceColors(Gl, TOP_COLOR, FRONT_COLOR, LEFT_COLOR, BLACK_COLOR, BLACK_COLOR, BLACK_COLOR, translation));
 
-            //------------------------------------------------ TOP FRONT MIDDLE ------------------------------------------------
+            //TOP FRONT MIDDLE
             translation = [0f, 1f, 1f];
             glCubes.Add(GlCube.CreateCubeWithFaceColors(Gl, TOP_COLOR, FRONT_COLOR, BLACK_COLOR, BLACK_COLOR, BLACK_COLOR, BLACK_COLOR, translation));
 
-            //------------------------------------------------ TOP  FRONT RIGHT ------------------------------------------------
+            //TOP  FRONT RIGHT
             translation = [1f, 1f, 1f];
             glCubes.Add(GlCube.CreateCubeWithFaceColors(Gl, TOP_COLOR, FRONT_COLOR, BLACK_COLOR, BLACK_COLOR, BLACK_COLOR, RIGHT_COLOR, translation));
 
-            //------------------------------------------------ TOP  MIDDLE LEFT ------------------------------------------------
+            //TOP  MIDDLE LEFT
             translation = [-1f, 1f, 0f];
             glCubes.Add(GlCube.CreateCubeWithFaceColors(Gl, TOP_COLOR, BLACK_COLOR, LEFT_COLOR, BLACK_COLOR, BLACK_COLOR, BLACK_COLOR, translation));
 
-            //------------------------------------------------ TOP MIDDLE MIDDLE ------------------------------------------------
+            //TOP MIDDLE MIDDLE 
             translation = [0f, 1f, 0f];
             glCubes.Add(GlCube.CreateCubeWithFaceColors(Gl, TOP_COLOR, BLACK_COLOR, BLACK_COLOR, BLACK_COLOR, BLACK_COLOR, BLACK_COLOR, translation));
 
-            //------------------------------------------------ TOP  MIDDLE RIGHT ------------------------------------------------
+            //TOP  MIDDLE RIGHT
             translation = [1f, 1f, 0f];
             glCubes.Add(GlCube.CreateCubeWithFaceColors(Gl, TOP_COLOR, BLACK_COLOR, BLACK_COLOR, BLACK_COLOR, BLACK_COLOR, RIGHT_COLOR, translation));
 
-            //------------------------------------------------ TOP  BACK LEFT ------------------------------------------------
+            //TOP  BACK LEFT
             translation = [-1f, 1f, -1f];
             glCubes.Add(GlCube.CreateCubeWithFaceColors(Gl, TOP_COLOR, BLACK_COLOR, LEFT_COLOR, BLACK_COLOR, BACK_COLOR, BLACK_COLOR, translation));
 
-            //------------------------------------------------ TOP BACK MIDDLE ------------------------------------------------
+            //TOP BACK MIDDLE 
             translation = [0f, 1f, -1f];
             glCubes.Add(GlCube.CreateCubeWithFaceColors(Gl, TOP_COLOR, BLACK_COLOR, BLACK_COLOR, BLACK_COLOR, BACK_COLOR, BLACK_COLOR, translation));
 
-            //------------------------------------------------ TOP  BACK RIGHT ------------------------------------------------
+            //TOP  BACK RIGHT
             translation = [1f, 1f, -1f];
             glCubes.Add(GlCube.CreateCubeWithFaceColors(Gl, TOP_COLOR, BLACK_COLOR, BLACK_COLOR, BLACK_COLOR, BACK_COLOR, RIGHT_COLOR, translation));
         }
-
 
 
         private static void Window_Closing()
