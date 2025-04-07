@@ -145,7 +145,50 @@ namespace GrafikaSzeminarium
                 case Key.Space:
                     cubeArrangementModel.AnimationEnabeld = !cubeArrangementModel.AnimationEnabeld;
                     break;
+                case Key.R:
+                    RotateSide('r');
+                    break;
+                case Key.T:
+                    RotateSide('t');
+                    break;
             }
+        }
+
+        private static unsafe void RotateSide(char key)
+        {
+            int nul = -10;
+            int x = nul, y = nul, z = nul;
+            int clockwise = 0;
+            switch (key)
+            {
+                case 'r':
+                    y = 1;
+                    break;
+                case 't':
+                    y = 1;
+                    break;
+            }
+            if ("r".Contains(key))
+            {
+                clockwise = 1;
+            }
+            else
+            {
+                clockwise = -1;
+            }
+            List<GlCube> rotCubes = new List<GlCube>();
+            foreach (GlCube cube in glCubes)
+            {
+                if (y != nul && cube.Translation[1] == y && cube.CurrentRotateY == 0)
+                {
+                    rotCubes.Add(cube);
+                }
+            }
+            foreach (GlCube cube in rotCubes)
+            {
+                cube.CurrentRotateY = clockwise;
+            }
+
         }
 
 
