@@ -8,12 +8,54 @@
     ".NETCoreApp,Version=v7.0": {
       "Szeminarium1/1.0.0": {
         "dependencies": {
-          "Silk.NET": "2.20.0",
+          "ImGui.NET": "1.91.6.1",
+          "Silk.NET": "2.22.0",
           "Silk.NET.OpenGL": "2.22.0",
+          "Silk.NET.OpenGL.Extensions.ImGui": "2.22.0",
           "Silk.NET.Windowing": "2.22.0"
         },
         "runtime": {
           "Szeminarium1.dll": {}
+        }
+      },
+      "ImGui.NET/1.91.6.1": {
+        "dependencies": {
+          "System.Buffers": "4.5.1",
+          "System.Numerics.Vectors": "4.5.0",
+          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+        },
+        "runtime": {
+          "lib/net6.0/ImGui.NET.dll": {
+            "assemblyVersion": "1.91.6.1",
+            "fileVersion": "1.91.6.1"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/linux-x64/native/libcimgui.so": {
+            "rid": "linux-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/osx/native/libcimgui.dylib": {
+            "rid": "osx",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-arm64/native/cimgui.dll": {
+            "rid": "win-arm64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x64/native/cimgui.dll": {
+            "rid": "win-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x86/native/cimgui.dll": {
+            "rid": "win-x86",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          }
         }
       },
       "Microsoft.CSharp/4.7.0": {},
@@ -37,15 +79,15 @@
           }
         }
       },
-      "Silk.NET/2.20.0": {
+      "Silk.NET/2.22.0": {
         "dependencies": {
           "Silk.NET.Core": "2.22.0",
           "Silk.NET.GLFW": "2.22.0",
-          "Silk.NET.Input": "2.20.0",
-          "Silk.NET.OpenAL": "2.20.0",
+          "Silk.NET.Input": "2.22.0",
+          "Silk.NET.OpenAL": "2.22.0",
           "Silk.NET.OpenGL": "2.22.0",
-          "Silk.NET.Vulkan": "2.20.0",
-          "Silk.NET.Vulkan.Extensions.KHR": "2.20.0",
+          "Silk.NET.Vulkan": "2.22.0",
+          "Silk.NET.Vulkan.Extensions.KHR": "2.22.0",
           "Silk.NET.Windowing": "2.22.0"
         }
       },
@@ -77,45 +119,43 @@
           }
         }
       },
-      "Silk.NET.Input/2.20.0": {
+      "Silk.NET.Input/2.22.0": {
         "dependencies": {
-          "Silk.NET.Input.Common": "2.20.0",
-          "Silk.NET.Input.Glfw": "2.20.0",
-          "Silk.NET.Input.Sdl": "2.20.0"
+          "Silk.NET.Input.Common": "2.22.0",
+          "Silk.NET.Input.Glfw": "2.22.0"
         }
       },
-      "Silk.NET.Input.Common/2.20.0": {
+      "Silk.NET.Input.Common/2.22.0": {
         "dependencies": {
           "Silk.NET.Windowing.Common": "2.22.0"
         },
         "runtime": {
           "lib/net5.0/Silk.NET.Input.Common.dll": {
-            "assemblyVersion": "2.20.0.0",
-            "fileVersion": "2.20.0.0"
+            "assemblyVersion": "2.22.0.0",
+            "fileVersion": "2.22.0.0"
           }
         }
       },
-      "Silk.NET.Input.Glfw/2.20.0": {
+      "Silk.NET.Input.Extensions/2.22.0": {
         "dependencies": {
-          "Silk.NET.Input.Common": "2.20.0",
+          "Silk.NET.Input.Common": "2.22.0"
+        },
+        "runtime": {
+          "lib/net5.0/Silk.NET.Input.Extensions.dll": {
+            "assemblyVersion": "2.22.0.0",
+            "fileVersion": "2.22.0.0"
+          }
+        }
+      },
+      "Silk.NET.Input.Glfw/2.22.0": {
+        "dependencies": {
+          "Silk.NET.Input.Common": "2.22.0",
           "Silk.NET.Windowing.Glfw": "2.22.0"
         },
         "runtime": {
           "lib/net5.0/Silk.NET.Input.Glfw.dll": {
-            "assemblyVersion": "2.20.0.0",
-            "fileVersion": "2.20.0.0"
-          }
-        }
-      },
-      "Silk.NET.Input.Sdl/2.20.0": {
-        "dependencies": {
-          "Silk.NET.Input.Common": "2.20.0",
-          "Silk.NET.Windowing.Sdl": "2.20.0"
-        },
-        "runtime": {
-          "lib/net5.0/Silk.NET.Input.Sdl.dll": {
-            "assemblyVersion": "2.20.0.0",
-            "fileVersion": "2.20.0.0"
+            "assemblyVersion": "2.22.0.0",
+            "fileVersion": "2.22.0.0"
           }
         }
       },
@@ -127,7 +167,7 @@
           }
         }
       },
-      "Silk.NET.OpenAL/2.20.0": {
+      "Silk.NET.OpenAL/2.22.0": {
         "dependencies": {
           "Silk.NET.Core": "2.22.0",
           "System.Buffers": "4.5.1",
@@ -135,8 +175,8 @@
         },
         "runtime": {
           "lib/net5.0/Silk.NET.OpenAL.dll": {
-            "assemblyVersion": "2.20.0.0",
-            "fileVersion": "2.20.0.0"
+            "assemblyVersion": "2.22.0.0",
+            "fileVersion": "2.22.0.0"
           }
         }
       },
@@ -152,39 +192,41 @@
           }
         }
       },
-      "Silk.NET.SDL/2.20.0": {
+      "Silk.NET.OpenGL.Extensions.ImGui/2.22.0": {
         "dependencies": {
-          "Silk.NET.Core": "2.22.0",
-          "Silk.NET.Maths": "2.22.0",
-          "Ultz.Native.SDL": "2.28.4"
+          "ImGui.NET": "1.91.6.1",
+          "Silk.NET.Input.Common": "2.22.0",
+          "Silk.NET.Input.Extensions": "2.22.0",
+          "Silk.NET.OpenGL": "2.22.0",
+          "Silk.NET.Windowing.Common": "2.22.0"
         },
         "runtime": {
-          "lib/net6.0/Silk.NET.SDL.dll": {
-            "assemblyVersion": "2.20.0.0",
-            "fileVersion": "2.20.0.0"
+          "lib/net5.0/Silk.NET.OpenGL.Extensions.ImGui.dll": {
+            "assemblyVersion": "2.22.0.0",
+            "fileVersion": "2.22.0.0"
           }
         }
       },
-      "Silk.NET.Vulkan/2.20.0": {
+      "Silk.NET.Vulkan/2.22.0": {
         "dependencies": {
           "Silk.NET.Core": "2.22.0"
         },
         "runtime": {
           "lib/net5.0/Silk.NET.Vulkan.dll": {
-            "assemblyVersion": "2.20.0.0",
-            "fileVersion": "2.20.0.0"
+            "assemblyVersion": "2.22.0.0",
+            "fileVersion": "2.22.0.0"
           }
         }
       },
-      "Silk.NET.Vulkan.Extensions.KHR/2.20.0": {
+      "Silk.NET.Vulkan.Extensions.KHR/2.22.0": {
         "dependencies": {
           "Silk.NET.Core": "2.22.0",
-          "Silk.NET.Vulkan": "2.20.0"
+          "Silk.NET.Vulkan": "2.22.0"
         },
         "runtime": {
           "lib/net5.0/Silk.NET.Vulkan.Extensions.KHR.dll": {
-            "assemblyVersion": "2.20.0.0",
-            "fileVersion": "2.20.0.0"
+            "assemblyVersion": "2.22.0.0",
+            "fileVersion": "2.22.0.0"
           }
         }
       },
@@ -215,18 +257,6 @@
           "lib/net5.0/Silk.NET.Windowing.Glfw.dll": {
             "assemblyVersion": "2.22.0.0",
             "fileVersion": "2.22.0.0"
-          }
-        }
-      },
-      "Silk.NET.Windowing.Sdl/2.20.0": {
-        "dependencies": {
-          "Silk.NET.SDL": "2.20.0",
-          "Silk.NET.Windowing.Common": "2.22.0"
-        },
-        "runtime": {
-          "lib/net6.0/Silk.NET.Windowing.Sdl.dll": {
-            "assemblyVersion": "2.20.0.0",
-            "fileVersion": "2.20.0.0"
           }
         }
       },
@@ -304,60 +334,6 @@
             "fileVersion": "3.4.0.0"
           }
         }
-      },
-      "Ultz.Native.SDL/2.28.4": {
-        "runtimeTargets": {
-          "runtimes/ios/native/libSDL2.a": {
-            "rid": "ios",
-            "assetType": "native",
-            "fileVersion": "0.0.0.0"
-          },
-          "runtimes/iossimulator/native/libSDL2.a": {
-            "rid": "iossimulator",
-            "assetType": "native",
-            "fileVersion": "0.0.0.0"
-          },
-          "runtimes/linux-x64/native/libSDL2-2.0.so": {
-            "rid": "linux-x64",
-            "assetType": "native",
-            "fileVersion": "0.0.0.0"
-          },
-          "runtimes/linux-x86/native/libSDL2-2.0.so": {
-            "rid": "linux-x86",
-            "assetType": "native",
-            "fileVersion": "0.0.0.0"
-          },
-          "runtimes/osx/native/libSDL2-2.0.dylib": {
-            "rid": "osx",
-            "assetType": "native",
-            "fileVersion": "0.0.0.0"
-          },
-          "runtimes/tvos/native/libSDL2.a": {
-            "rid": "tvos",
-            "assetType": "native",
-            "fileVersion": "0.0.0.0"
-          },
-          "runtimes/tvossimulator/native/libSDL2.a": {
-            "rid": "tvossimulator",
-            "assetType": "native",
-            "fileVersion": "0.0.0.0"
-          },
-          "runtimes/win-arm64/native/SDL2.dll": {
-            "rid": "win-arm64",
-            "assetType": "native",
-            "fileVersion": "2.28.1.0"
-          },
-          "runtimes/win-x64/native/SDL2.dll": {
-            "rid": "win-x64",
-            "assetType": "native",
-            "fileVersion": "2.28.1.0"
-          },
-          "runtimes/win-x86/native/SDL2.dll": {
-            "rid": "win-x86",
-            "assetType": "native",
-            "fileVersion": "2.28.1.0"
-          }
-        }
       }
     }
   },
@@ -366,6 +342,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "ImGui.NET/1.91.6.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Ph3j8pO6UM28PPJWP+5LEJSPVPkd8ivpVS8tRyY9b0IHn1HDIrMZ2o/FdiXaYW6YhNxMHmbevw6Jcfs+IDKi0Q==",
+      "path": "imgui.net/1.91.6.1",
+      "hashPath": "imgui.net.1.91.6.1.nupkg.sha512"
     },
     "Microsoft.CSharp/4.7.0": {
       "type": "package",
@@ -388,12 +371,12 @@
       "path": "microsoft.extensions.dependencymodel/8.0.0",
       "hashPath": "microsoft.extensions.dependencymodel.8.0.0.nupkg.sha512"
     },
-    "Silk.NET/2.20.0": {
+    "Silk.NET/2.22.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-yyLeunXF3HaAoyziVcUso40KVCUV4zwThYQFgZGaRb0s9+zM5pJ6XYE2NRLeLWbdyv/voJNPUvO9lyD4XEP5Jg==",
-      "path": "silk.net/2.20.0",
-      "hashPath": "silk.net.2.20.0.nupkg.sha512"
+      "sha512": "sha512-ewWzAfpHptiU1YNQ5K5iFYWFWQcnJnZeygrj8Fv7dkefKYOO8tl7J43hXSC6pd+hPKDYDfw6FC6g+flUcdtZAA==",
+      "path": "silk.net/2.22.0",
+      "hashPath": "silk.net.2.22.0.nupkg.sha512"
     },
     "Silk.NET.Core/2.22.0": {
       "type": "package",
@@ -409,33 +392,33 @@
       "path": "silk.net.glfw/2.22.0",
       "hashPath": "silk.net.glfw.2.22.0.nupkg.sha512"
     },
-    "Silk.NET.Input/2.20.0": {
+    "Silk.NET.Input/2.22.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-RUM56lvG2ZX8/+Kmx9SGqUlXeEOtfdIVTkB6WG0Fc+Wl1Gs59FUj3du5+Brsx6M8fqS8QF4xF1z38Su/H10jBg==",
-      "path": "silk.net.input/2.20.0",
-      "hashPath": "silk.net.input.2.20.0.nupkg.sha512"
+      "sha512": "sha512-1gqbKHrKpBv2Vk983kVpMqXL4Uj36NaUIQ2YbQosFVa3pXJE8UMGiWqKtaeoMqnzItusZ1WYgDHKge37EvNm/w==",
+      "path": "silk.net.input/2.22.0",
+      "hashPath": "silk.net.input.2.22.0.nupkg.sha512"
     },
-    "Silk.NET.Input.Common/2.20.0": {
+    "Silk.NET.Input.Common/2.22.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-onPElezFywVC68Ir94rHZ17Eptw/bpuryBdcLwuYnHIAawgouMheVBL2b+b9i7Aexv6gIaN6X5H9t8JSeKPzUQ==",
-      "path": "silk.net.input.common/2.20.0",
-      "hashPath": "silk.net.input.common.2.20.0.nupkg.sha512"
+      "sha512": "sha512-DZy30akJABBmTnn8OICik0TFEuXrkd7YCQvoq+oh50eJzXt8JgEYYa+sJYBib/Phs5WULZg/QR7fM8Gi1G3tXg==",
+      "path": "silk.net.input.common/2.22.0",
+      "hashPath": "silk.net.input.common.2.22.0.nupkg.sha512"
     },
-    "Silk.NET.Input.Glfw/2.20.0": {
+    "Silk.NET.Input.Extensions/2.22.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-8asmacZLFfe8JoiM2iDlc581300Pk1CrKviPEBkkg/5XBpEWcuYeZxpoy6+8tNgCq6ebB142ufACUPdfw7XS+Q==",
-      "path": "silk.net.input.glfw/2.20.0",
-      "hashPath": "silk.net.input.glfw.2.20.0.nupkg.sha512"
+      "sha512": "sha512-SP3uum6DaC/4lgC0BTAVaVnn0Il8kBBUn2kzrRNxCpdZ7kvXnXgDzblh1b3QIkhQvTPDtkMHdqNlxjfDc6WRxQ==",
+      "path": "silk.net.input.extensions/2.22.0",
+      "hashPath": "silk.net.input.extensions.2.22.0.nupkg.sha512"
     },
-    "Silk.NET.Input.Sdl/2.20.0": {
+    "Silk.NET.Input.Glfw/2.22.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-IFC2v5bjVgyjpMy5/KLwhpCV6aWPLWevuAwxeohWWavoJq8lzZd6D2b8Mk5mHE17JYU3ksc5YcuZf2vz3xmFiQ==",
-      "path": "silk.net.input.sdl/2.20.0",
-      "hashPath": "silk.net.input.sdl.2.20.0.nupkg.sha512"
+      "sha512": "sha512-LZPZT1e/RxnjKfkqlp2Wp8KJFP1Av/ErTCZ00EzZpFR1lhUSBgSmgJwXg6XlWoEJHyeJcsXV688zjoEe6YW0BA==",
+      "path": "silk.net.input.glfw/2.22.0",
+      "hashPath": "silk.net.input.glfw.2.22.0.nupkg.sha512"
     },
     "Silk.NET.Maths/2.22.0": {
       "type": "package",
@@ -444,12 +427,12 @@
       "path": "silk.net.maths/2.22.0",
       "hashPath": "silk.net.maths.2.22.0.nupkg.sha512"
     },
-    "Silk.NET.OpenAL/2.20.0": {
+    "Silk.NET.OpenAL/2.22.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-RpRuHuVx4Ms5ZiEGfu7Fi6lSyhtxYGxApw+rn2RVvuFTtlFmy5tf+a5pvJHW7eEoYOgUzZRS4P3S6jM9QkbwYw==",
-      "path": "silk.net.openal/2.20.0",
-      "hashPath": "silk.net.openal.2.20.0.nupkg.sha512"
+      "sha512": "sha512-YpzIhYRcUZ8dHML8+DUHqEgu0exmZhouWYHGR4AXPtD63YbFuuO4aFqulWkCpIaOvjCdsIWtNKElLJreLxXvFw==",
+      "path": "silk.net.openal/2.22.0",
+      "hashPath": "silk.net.openal.2.22.0.nupkg.sha512"
     },
     "Silk.NET.OpenGL/2.22.0": {
       "type": "package",
@@ -458,26 +441,26 @@
       "path": "silk.net.opengl/2.22.0",
       "hashPath": "silk.net.opengl.2.22.0.nupkg.sha512"
     },
-    "Silk.NET.SDL/2.20.0": {
+    "Silk.NET.OpenGL.Extensions.ImGui/2.22.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-AQTPGMEqv2gh5A91wRMGWJ5Dh9rrsKiHNsIKB6aJE6eIZOYdZM96kg/z4W1EDto1R7jJY1+f/k65D7ZM1H1M6w==",
-      "path": "silk.net.sdl/2.20.0",
-      "hashPath": "silk.net.sdl.2.20.0.nupkg.sha512"
+      "sha512": "sha512-ZHne8za0yoQm1/ygDBUzyJI+8y7Y6B8S34OT7GINH+ePY8cK3T3OJFs7Zh7g1/fuXIapHKxC+6sg7KkykRR57g==",
+      "path": "silk.net.opengl.extensions.imgui/2.22.0",
+      "hashPath": "silk.net.opengl.extensions.imgui.2.22.0.nupkg.sha512"
     },
-    "Silk.NET.Vulkan/2.20.0": {
+    "Silk.NET.Vulkan/2.22.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-Hoz78z0GqajqeO//n7oM/qRJcqYFDPULkbLVO/Lp99rEQCUPR8cTsiY6JE6bO24eFB81kO9pZC/tjQE/9rpNMA==",
-      "path": "silk.net.vulkan/2.20.0",
-      "hashPath": "silk.net.vulkan.2.20.0.nupkg.sha512"
+      "sha512": "sha512-VBX7A5oosMQL9W/9dDzX+Dn4fr/ZaCwKv7X+nnJQhNbUAZ0tly6As/wA29oA7fM6N5PxROWKwnezttSZW8dGgQ==",
+      "path": "silk.net.vulkan/2.22.0",
+      "hashPath": "silk.net.vulkan.2.22.0.nupkg.sha512"
     },
-    "Silk.NET.Vulkan.Extensions.KHR/2.20.0": {
+    "Silk.NET.Vulkan.Extensions.KHR/2.22.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-OFMFzNTyqoF95c8GPaQOaUvI0fo2fwYbBXKpx/kOEsT7Yz9vYBzir+0mx70EtCezg7aLUcMnuzyy2FMPWtvy0g==",
-      "path": "silk.net.vulkan.extensions.khr/2.20.0",
-      "hashPath": "silk.net.vulkan.extensions.khr.2.20.0.nupkg.sha512"
+      "sha512": "sha512-tyJCjj4ojQmwacvIjkpMMc85zKGy+9htJQqom6QNG1Zg8ljTuqoMomoUlPtP9IJyRS3moSwy3KpdGrbHxrNeLA==",
+      "path": "silk.net.vulkan.extensions.khr/2.22.0",
+      "hashPath": "silk.net.vulkan.extensions.khr.2.22.0.nupkg.sha512"
     },
     "Silk.NET.Windowing/2.22.0": {
       "type": "package",
@@ -499,13 +482,6 @@
       "sha512": "sha512-hBNxNSLvx/jdfvbU6oCsXcgLfqf9hMlEc6Mq/rllJ0eUTLloacuOZHTM8V702QGf7hOR+Mo4bTFqTqBnC0CM7g==",
       "path": "silk.net.windowing.glfw/2.22.0",
       "hashPath": "silk.net.windowing.glfw.2.22.0.nupkg.sha512"
-    },
-    "Silk.NET.Windowing.Sdl/2.20.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-Os5752+77ft+73U7hYmlrVajCMoD/etss5jVUSUteyifLh71ieQMQ046SdhoEtltsm1MmTp02T986GsXu82+BQ==",
-      "path": "silk.net.windowing.sdl/2.20.0",
-      "hashPath": "silk.net.windowing.sdl.2.20.0.nupkg.sha512"
     },
     "System.Buffers/4.5.1": {
       "type": "package",
@@ -555,13 +531,6 @@
       "sha512": "sha512-Iy22JopynbOJ32vA0lBhFEzGi65GQJBuJHYBYRBpydrDpNoTiHnjIXfA65Gu+8qsOr/ZEoIF8r9aHCgAXuO6DA==",
       "path": "ultz.native.glfw/3.4.0",
       "hashPath": "ultz.native.glfw.3.4.0.nupkg.sha512"
-    },
-    "Ultz.Native.SDL/2.28.4": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-PNjy7xHiR3p8xkzfVSGhPlRYkzGZjVH6sFiJn2zMNKDQOXxqawUXJAyhFOUpdN36gyVJ26Gl4Z2CcmoLrgEArA==",
-      "path": "ultz.native.sdl/2.28.4",
-      "hashPath": "ultz.native.sdl.2.28.4.nupkg.sha512"
     }
   }
 }
