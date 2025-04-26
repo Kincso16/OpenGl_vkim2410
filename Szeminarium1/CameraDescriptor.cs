@@ -1,111 +1,91 @@
-﻿using Silk.NET.Input;
-using System.Numerics;
-using Silk.NET.Maths;
+﻿using Silk.NET.Maths;
 
 namespace GrafikaSzeminarium
 {
     internal class CameraDescriptor
     {
-        // Setup the camera's location, directions, and movement speed
-        private static Vector3D<float> CameraPosition = new Vector3D<float>(0.0f, 0.0f, 8.0f);
-        private static Vector3D<float> CameraFront = new Vector3D<float>(0.0f, 0.0f, -1.0f);
-        private static Vector3D<float> CameraUp = Vector3D<float>.UnitY; 
-        private static float CameraYaw = -90f;
-        private static float CameraPitch = 0f;
-        private static float CameraZoom = 45f;
-        private static float MaxPitch = 89f; 
+        private double DistanceToOrigin = 1;
 
-        private static float DegreesToRadians(float degrees)
+        private double AngleToZYPlane = 0;
+
+        private double AngleToZXPlane = 0;
+
+        private const double DistanceScaleFactor = 1.1;
+
+        private const double AngleChangeStepSize = Math.PI / 180 * 5;
+
+        /// <summary>
+        /// Gets the position of the camera.
+        /// </summary>
+        public Vector3D<float> Position
         {
-            return MathF.PI / 180f * degrees;
+            get
+            {
+                return GetPointFromAngles(DistanceToOrigin, AngleToZYPlane, AngleToZXPlane);
+            }
         }
 
-        // Calculate Camera's Front Direction based on yaw and pitch
-        private void UpdateCameraFront()
+        /// <summary>
+        /// Gets the up vector of the camera.
+        /// </summary>
+        public Vector3D<float> UpVector
         {
-            var front = new Vector3D<float>(
-                MathF.Cos(DegreesToRadians(CameraYaw)) * MathF.Cos(DegreesToRadians(CameraPitch)),
-                MathF.Sin(DegreesToRadians(CameraPitch)),
-                MathF.Sin(DegreesToRadians(CameraYaw)) * MathF.Cos(DegreesToRadians(CameraPitch))
-            );
-
-            CameraFront = Vector3D.Normalize(front);
+            get
+            {
+                return Vector3D.Normalize(GetPointFromAngles(DistanceToOrigin, AngleToZYPlane, AngleToZXPlane + Math.PI / 2));
+            }
         }
 
-        public Matrix4X4<float> getView()
+        /// <summary>
+        /// Gets the target point of the camera view.
+        /// </summary>
+        public Vector3D<float> Target
         {
-            return Matrix4X4.CreateLookAt<float>(CameraPosition, CameraPosition + CameraFront, CameraUp);
+            get
+            {
+                // For the moment the camera is always pointed at the origin.
+                return Vector3D<float>.Zero;
+            }
         }
 
-        public Matrix4X4<float> getProjection(Vector2D<int> size)
+        public void IncreaseZXAngle()
         {
-            return Matrix4X4.CreatePerspectiveFieldOfView(DegreesToRadians(CameraZoom), (float)size.X / size.Y, 0.1f, 100.0f);
+            AngleToZXPlane += AngleChangeStepSize;
         }
 
-        // Move the camera upward
-        public void MoveUp(float moveSpeed)
+        public void DecreaseZXAngle()
         {
-            CameraPosition += moveSpeed * CameraUp;
+            AngleToZXPlane -= AngleChangeStepSize;
         }
 
-        // Move the camera downward
-        public void MoveDown(float moveSpeed)
+        public void IncreaseZYAngle()
         {
-            CameraPosition -= moveSpeed * CameraUp;
+            AngleToZYPlane += AngleChangeStepSize;
+
         }
 
-        // Move the camera to the right
-        public void MoveRight(float moveSpeed)
+        public void DecreaseZYAngle()
         {
-            CameraPosition += Vector3D.Normalize(Vector3D.Cross(CameraFront, CameraUp)) * moveSpeed;
+            AngleToZYPlane -= AngleChangeStepSize;
         }
 
-        // Move the camera to the left
-        public void MoveLeft(float moveSpeed)
+        public void IncreaseDistance()
         {
-            CameraPosition -= Vector3D.Normalize(Vector3D.Cross(CameraFront, CameraUp)) * moveSpeed;
+            DistanceToOrigin = DistanceToOrigin * DistanceScaleFactor;
         }
 
-        // Move the camera forward
-        public void MoveForward(float moveSpeed)
+        public void DecreaseDistance()
         {
-            CameraPosition += moveSpeed * CameraFront;
+            DistanceToOrigin = DistanceToOrigin / DistanceScaleFactor;
         }
 
-        // Move the camera backward
-        public void MoveBackward(float moveSpeed)
+        private static Vector3D<float> GetPointFromAngles(double distanceToOrigin, double angleToMinZYPlane, double angleToMinZXPlane)
         {
-            CameraPosition -= moveSpeed * CameraFront;
-        }
+            var x = distanceToOrigin * Math.Cos(angleToMinZXPlane) * Math.Sin(angleToMinZYPlane);
+            var z = distanceToOrigin * Math.Cos(angleToMinZXPlane) * Math.Cos(angleToMinZYPlane);
+            var y = distanceToOrigin * Math.Sin(angleToMinZXPlane);
 
-        // Look up (tilt camera upwards)
-        public void LookUp(float pitchSpeed)
-        {
-            CameraPitch += pitchSpeed;
-            if (CameraPitch > MaxPitch) CameraPitch = MaxPitch; 
-            UpdateCameraFront();
-        }
-
-        // Look down (tilt camera downwards)
-        public void LookDown(float pitchSpeed)
-        {
-            CameraPitch -= pitchSpeed;
-            if (CameraPitch < -MaxPitch) CameraPitch = -MaxPitch; 
-            UpdateCameraFront();
-        }
-
-        // Look left (tilt camera to the left)
-        public void LookLeft(float angle)
-        {
-            CameraYaw -= angle; 
-            if (CameraYaw < -180.0f) CameraYaw += 360.0f;
-        }
-
-        // Look right (tilt camera to the right)
-        public void LookRight(float angle)
-        {
-            CameraYaw += angle; 
-            if (CameraYaw > 180.0f) CameraYaw -= 360.0f; 
+            return new Vector3D<float>((float)x, (float)y, (float)z);
         }
     }
 }

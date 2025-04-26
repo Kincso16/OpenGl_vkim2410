@@ -1,4 +1,11 @@
 ﻿using Silk.NET.OpenGL;
+using Silk.NET.Vulkan;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace GrafikaSzeminarium
 {
@@ -11,12 +18,8 @@ namespace GrafikaSzeminarium
         public uint IndexArrayLength { get; }
 
         private GL Gl;
-        public float[] Translation { get; }
-        public int CurrentRotateY { get; set; }
-        public float RotateAngleY { get; set; }
 
-
-        private GlCube(uint vao, uint vertices, uint colors, uint indeces, uint indexArrayLength, GL gl, float[] translation)
+        private GlCube(uint vao, uint vertices, uint colors, uint indeces, uint indexArrayLength, GL gl)
         {
             this.Vao = vao;
             this.Vertices = vertices;
@@ -24,47 +27,50 @@ namespace GrafikaSzeminarium
             this.Indices = indeces;
             this.IndexArrayLength = indexArrayLength;
             this.Gl = gl;
-            this.Translation = [translation[0], translation[1], translation[2]];
-            this.CurrentRotateY = 0;
         }
 
-        public static unsafe GlCube CreateCubeWithFaceColors(GL Gl, float[] face1Color, float[] face2Color, float[] face3Color, float[] face4Color, float[] face5Color, float[] face6Color, float[] translation)
+        public static unsafe GlCube CreateCubeWithFaceColors(GL Gl, float[] face1Color, float[] face2Color, float[] face3Color, float[] face4Color, float[] face5Color, float[] face6Color)
         {
             uint vao = Gl.GenVertexArray();
             Gl.BindVertexArray(vao);
 
             // counter clockwise is front facing
             float[] vertexArray = new float[] {
-                -0.5f, 0.5f, 0.5f,
-                0.5f, 0.5f, 0.5f,
-                0.5f, 0.5f, -0.5f,
-                -0.5f, 0.5f, -0.5f,
+                // top face
+                -0.5f, 0.5f, 0.5f, 0f, 1f, 0f,
+                0.5f, 0.5f, 0.5f, 0f, 1f, 0f,
+                0.5f, 0.5f, -0.5f, 0f, 1f, 0f,
+                -0.5f, 0.5f, -0.5f, 0f, 1f, 0f,
 
-                -0.5f, 0.5f, 0.5f,
-                -0.5f, -0.5f, 0.5f,
-                0.5f, -0.5f, 0.5f,
-                0.5f, 0.5f, 0.5f,
+                // front face
+                -0.5f, 0.5f, 0.5f, 0f, 0f, 1f,
+                -0.5f, -0.5f, 0.5f, 0f, 0f, 1f,
+                0.5f, -0.5f, 0.5f, 0f, 0f, 1f,
+                0.5f, 0.5f, 0.5f, 0f, 0f, 1f,
 
-                -0.5f, 0.5f, 0.5f,
-                -0.5f, 0.5f, -0.5f,
-                -0.5f, -0.5f, -0.5f,
-                -0.5f, -0.5f, 0.5f,
+                // left face
+                -0.5f, 0.5f, 0.5f, -1f, 0f, 0f,
+                -0.5f, 0.5f, -0.5f, -1f, 0f, 0f,
+                -0.5f, -0.5f, -0.5f, -1f, 0f, 0f,
+                -0.5f, -0.5f, 0.5f, -1f, 0f, 0f,
 
-                -0.5f, -0.5f, 0.5f,
-                0.5f, -0.5f, 0.5f,
-                0.5f, -0.5f, -0.5f,
-                -0.5f, -0.5f, -0.5f,
+                // bottom face
+                -0.5f, -0.5f, 0.5f, 0f, -1f, 0f,
+                0.5f, -0.5f, 0.5f,0f, -1f, 0f,
+                0.5f, -0.5f, -0.5f,0f, -1f, 0f,
+                -0.5f, -0.5f, -0.5f,0f, -1f, 0f,
 
-                0.5f, 0.5f, -0.5f,
-                -0.5f, 0.5f, -0.5f,
-                -0.5f, -0.5f, -0.5f,
-                0.5f, -0.5f, -0.5f,
+                // back face
+                0.5f, 0.5f, -0.5f, 0f, 0f, -1f,
+                -0.5f, 0.5f, -0.5f,0f, 0f, -1f,
+                -0.5f, -0.5f, -0.5f,0f, 0f, -1f,
+                0.5f, -0.5f, -0.5f,0f, 0f, -1f,
 
-                0.5f, 0.5f, 0.5f,
-                0.5f, 0.5f, -0.5f,
-                0.5f, -0.5f, -0.5f,
-                0.5f, -0.5f, 0.5f,
-
+                // right face
+                0.5f, 0.5f, 0.5f, 1f, 0f, 0f,
+                0.5f, 0.5f, -0.5f,1f, 0f, 0f,
+                0.5f, -0.5f, -0.5f,1f, 0f, 0f,
+                0.5f, -0.5f, 0.5f,1f, 0f, 0f
             };
 
             List<float> colorsList = new List<float>();
@@ -121,11 +127,18 @@ namespace GrafikaSzeminarium
                 20, 23, 22
             };
 
+            uint offsetPos = 0;
+            uint offsetNormal = offsetPos + (3 * sizeof(float));
+            uint vertexSize = offsetNormal + (3 * sizeof(float));
+
             uint vertices = Gl.GenBuffer();
             Gl.BindBuffer(GLEnum.ArrayBuffer, vertices);
             Gl.BufferData(GLEnum.ArrayBuffer, (ReadOnlySpan<float>)vertexArray.AsSpan(), GLEnum.StaticDraw);
-            Gl.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, null);
+            Gl.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, vertexSize, (void*)offsetPos);
             Gl.EnableVertexAttribArray(0);
+
+            Gl.EnableVertexAttribArray(2);
+            Gl.VertexAttribPointer(2, 3, VertexAttribPointerType.Float, false, vertexSize, (void*)offsetNormal);
 
             uint colors = Gl.GenBuffer();
             Gl.BindBuffer(GLEnum.ArrayBuffer, colors);
@@ -141,7 +154,7 @@ namespace GrafikaSzeminarium
             Gl.BindBuffer(GLEnum.ArrayBuffer, 0);
             uint indexArrayLength = (uint)indexArray.Length;
 
-            return new GlCube(vao, vertices, colors, indices, indexArrayLength, Gl, translation);
+            return new GlCube(vao, vertices, colors, indices, indexArrayLength, Gl);
         }
 
         internal void ReleaseGlCube()
