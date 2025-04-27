@@ -4,11 +4,11 @@ namespace GrafikaSzeminarium
 {
     internal class CameraDescriptor
     {
-        private double DistanceToOrigin = 15;
+        private double DistanceToOrigin = 5;
 
-        private double AngleToZYPlane = Math.PI / 180 * 64;
+        private double AngleToZYPlane = 0;
 
-        private double AngleToZXPlane = Math.PI / 180 *32;
+        private double AngleToZXPlane = 0;
 
         private const double DistanceScaleFactor = 1.008;
 
