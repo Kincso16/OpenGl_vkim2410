@@ -4,15 +4,15 @@ namespace GrafikaSzeminarium
 {
     internal class CameraDescriptor
     {
-        private double DistanceToOrigin = 1;
+        private double DistanceToOrigin = 15;
 
-        private double AngleToZYPlane = 0;
+        private double AngleToZYPlane = Math.PI / 180 * 64;
 
-        private double AngleToZXPlane = 0;
+        private double AngleToZXPlane = Math.PI / 180 *32;
 
-        private const double DistanceScaleFactor = 1.1;
+        private const double DistanceScaleFactor = 1.008;
 
-        private const double AngleChangeStepSize = Math.PI / 180 * 5;
+        private const double AngleChangeStepSize = Math.PI / 180;
 
         /// <summary>
         /// Gets the position of the camera.

@@ -11,7 +11,7 @@ namespace GrafikaSzeminarium
     {
         private static CameraDescriptor cameraDescriptor = new();
 
-        private static CubeArrangementModel cubeArrangementModel = new();
+        private static RectangleArrangementModel rectangleArrangementModel = new();
 
         private static IWindow window;
 
@@ -23,9 +23,9 @@ namespace GrafikaSzeminarium
 
         private static uint program;
 
-        private static GlCube glCubeCentered;
+        private static GlRectangle[] glRectanglesUp = new GlRectangle[18];
 
-        private static GlCube glCubeRotating;
+        private static GlRectangle[] glRectanglesDown = new GlRectangle[18];
 
         private static float Shininess = 50;
 
@@ -147,7 +147,7 @@ namespace GrafikaSzeminarium
 
             LinkProgram();
 
-            Gl.Enable(EnableCap.CullFace);
+            //Gl.Enable(EnableCap.CullFace);  igy a hata is latszik
 
             Gl.Enable(EnableCap.DepthTest);
             Gl.DepthFunc(DepthFunction.Lequal);
@@ -205,9 +205,6 @@ namespace GrafikaSzeminarium
                 case Key.D:
                     cameraDescriptor.DecreaseZXAngle();
                     break;
-                case Key.Space:
-                    cubeArrangementModel.AnimationEnabeld = !cubeArrangementModel.AnimationEnabeld;
-                    break;
             }
         }
 
@@ -217,7 +214,7 @@ namespace GrafikaSzeminarium
             // multithreaded
             // make sure it is threadsafe
             // NO GL calls
-            cubeArrangementModel.AdvanceTime(deltaTime);
+            rectangleArrangementModel.AdvanceTime(deltaTime);
 
             controller.Update((float)deltaTime);
         }
@@ -240,17 +237,16 @@ namespace GrafikaSzeminarium
             SetLightPosition();
             SetViewerPosition();
             SetShininess();
+            
+            DrawRec(new Vector3D<float>(0f, 2f, 0f), glRectanglesUp);
 
-            DrawPulsingCenterCube();
-
-            DrawRevolvingCube();
+            DrawRec(new Vector3D<float>(0f, -2f, 0f), glRectanglesDown);
 
             //ImGuiNET.ImGui.ShowDemoWindow();
             ImGuiNET.ImGui.Begin("Lighting properties",
                 ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoTitleBar);
             ImGuiNET.ImGui.SliderFloat("Shininess", ref Shininess, 1, 200);
             ImGuiNET.ImGui.End();
-
 
             controller.Render();
         }
@@ -277,7 +273,7 @@ namespace GrafikaSzeminarium
                 throw new Exception($"{LightPositionVariableName} uniform not found on shader.");
             }
 
-            Gl.Uniform3(location, 0f, 2f, 0f);
+            Gl.Uniform3(location, 5f, 0f, 0f);
             CheckError();
         }
 
@@ -307,33 +303,23 @@ namespace GrafikaSzeminarium
             CheckError();
         }
 
-        private static unsafe void DrawRevolvingCube()
+        private static unsafe void DrawRec(Vector3D<float> location,GlRectangle[] glrec)
         {
-            // set material uniform to metal
+            Matrix4X4<float> scale = Matrix4X4.CreateScale(1.0f);
 
-            Matrix4X4<float> diamondScale = Matrix4X4.CreateScale(0.25f);
-            Matrix4X4<float> rotx = Matrix4X4.CreateRotationX((float)Math.PI / 4f);
-            Matrix4X4<float> rotz = Matrix4X4.CreateRotationZ((float)Math.PI / 4f);
-            Matrix4X4<float> rotLocY = Matrix4X4.CreateRotationY((float)cubeArrangementModel.DiamondCubeAngleOwnRevolution);
-            Matrix4X4<float> trans = Matrix4X4.CreateTranslation(1f, 1f, 0f);
-            Matrix4X4<float> rotGlobY = Matrix4X4.CreateRotationY((float)cubeArrangementModel.DiamondCubeAngleRevolutionOnGlobalY);
-            Matrix4X4<float> modelMatrix = diamondScale * rotx * rotz * rotLocY * trans * rotGlobY;
+            float translationToZ = 1 / (float)(2 * Math.Tan(Math.PI / 18));
 
-            SetModelMatrix(modelMatrix);
-            Gl.BindVertexArray(glCubeRotating.Vao);
-            Gl.DrawElements(GLEnum.Triangles, glCubeRotating.IndexArrayLength, GLEnum.UnsignedInt, null);
-            Gl.BindVertexArray(0);
-        }
+            Matrix4X4<float> translation = Matrix4X4.CreateTranslation(0f, 0f, translationToZ);
 
-        private static unsafe void DrawPulsingCenterCube()
-        {
-            // set material uniform to rubber
-
-            var modelMatrixForCenterCube = Matrix4X4.CreateScale((float)cubeArrangementModel.CenterCubeScale);
-            SetModelMatrix(modelMatrixForCenterCube);
-            Gl.BindVertexArray(glCubeCentered.Vao);
-            Gl.DrawElements(GLEnum.Triangles, glCubeCentered.IndexArrayLength, GLEnum.UnsignedInt, null);
-            Gl.BindVertexArray(0);
+            for (int i = 0; i < 18; i++)
+            {
+                Matrix4X4<float> rotationMatrix = Matrix4X4.CreateRotationY((float)(20 * (Math.PI / 180)) * i);
+                Matrix4X4<float> modelMatrix = translation * rotationMatrix * Matrix4X4.CreateTranslation(location);
+                SetModelMatrix(modelMatrix);
+                Gl.BindVertexArray(glrec[i].Vao);
+                Gl.DrawElements(GLEnum.Triangles, glrec[i].IndexArrayLength, GLEnum.UnsignedInt, null);
+                Gl.BindVertexArray(0);
+            }
         }
 
         private static unsafe void SetModelMatrix(Matrix4X4<float> modelMatrix)
@@ -367,25 +353,22 @@ namespace GrafikaSzeminarium
 
         private static unsafe void SetUpObjects()
         {
+            float[] color = [1.0f, 0.0f, 0.0f, 1.0f];
 
-            float[] face1Color = [1.0f, 0.0f, 0.0f, 1.0f];
-            float[] face2Color = [0.0f, 1.0f, 0.0f, 1.0f];
-            float[] face3Color = [0.0f, 0.0f, 1.0f, 1.0f];
-            float[] face4Color = [1.0f, 0.0f, 1.0f, 1.0f];
-            float[] face5Color = [0.0f, 1.0f, 1.0f, 1.0f];
-            float[] face6Color = [1.0f, 1.0f, 0.0f, 1.0f];
-
-            glCubeCentered = GlCube.CreateCubeWithFaceColors(Gl, face1Color, face1Color, face3Color, face4Color, face5Color, face6Color);
-
-            glCubeRotating = GlCube.CreateCubeWithFaceColors(Gl, face1Color, face1Color, face1Color, face1Color, face1Color, face1Color);
+            for (int i = 0; i < 18; i++)
+            {
+                glRectanglesUp[i] = GlRectangle.CreateGlRectangle(Gl, color);
+                glRectanglesDown[i] = GlRectangle.CreateRectangleXZNormalVector(Gl, color);
+            }
         }
-
-        
 
         private static void Window_Closing()
         {
-            glCubeCentered.ReleaseGlCube();
-            glCubeRotating.ReleaseGlCube();
+            for (int i = 0; i < 18; i++)
+            {
+                glRectanglesUp[i].ReleaseGlRectangle();
+                glRectanglesDown[i].ReleaseGlRectangle();
+            }
         }
 
         private static unsafe void SetProjectionMatrix()
