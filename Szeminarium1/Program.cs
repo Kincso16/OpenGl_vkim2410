@@ -331,15 +331,18 @@ namespace GrafikaSzeminarium
 
         private static unsafe void DrawRedBall()
         {
-            // Set red plastic or rubber material here
-            // Example: SetMaterial(MaterialType.RedPlastic);
-
             var modelMatrixForRedBall = Matrix4X4.CreateScale(0.5f) *
-                                        Matrix4X4.CreateTranslation(0f, 0.5f, 0f);
+                                        Matrix4X4.CreateTranslation(0f, 0.65f, 0f);
             SetModelMatrix(modelMatrixForRedBall);
 
             Gl.BindVertexArray(redball.Vao);
             Gl.DrawElements(GLEnum.Triangles, redball.IndexArrayLength, GLEnum.UnsignedInt, null);
+            Gl.BindVertexArray(0);
+
+            var modelMatrixForTable = Matrix4X4.CreateScale(1f, 1f, 1f);
+            SetModelMatrix(modelMatrixForTable);
+            Gl.BindVertexArray(table.Vao);
+            Gl.DrawElements(GLEnum.Triangles, table.IndexArrayLength, GLEnum.UnsignedInt, null);
             Gl.BindVertexArray(0);
         }
 
@@ -388,11 +391,15 @@ namespace GrafikaSzeminarium
 
             redball = FbxResourceReader.CreateRedBallFromFbx(Gl, path, face1Color);
 
+            path = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "table.fbx");
+
+            //table = FbxResourceReader.CreateRedBallFromFbx(Gl, path, face2Color);
+ 
             float[] tableColor = [System.Drawing.Color.Azure.R/256f,
                                   System.Drawing.Color.Azure.G/256f,
                                   System.Drawing.Color.Azure.B/256f,
                                   1f];
-            //table = GlCube.CreateSquare(Gl, tableColor);
+            table = GlCube.CreateSquare(Gl, tableColor);
 
             //glCubeRotating = GlCube.CreateCubeWithFaceColors(Gl, face1Color, face2Color, face3Color, face4Color, face5Color, face6Color);
 
@@ -405,6 +412,8 @@ namespace GrafikaSzeminarium
         {
             //teapot.ReleaseGlObject();
             redball.ReleaseGlObject();
+            table.ReleaseGlObject();    
+            skyBox.ReleaseGlObject();
             //glCubeRotating.ReleaseGlObject();
         }
 
