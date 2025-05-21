@@ -30,6 +30,8 @@ namespace GrafikaSzeminarium
 
         private static GlObject table;
 
+        private static GlObject enemy;
+
         private static GlCube glCubeRotating;
 
         private static GlCube skyBox;
@@ -204,6 +206,18 @@ namespace GrafikaSzeminarium
             DrawRedBall();
 
             DrawSkyBox();
+            float x = MathF.Sin(enemyTime) * 5f;
+            float y = 1f; 
+            float z = 10f;
+            DrawEnemy((float)deltaTime,x,y,z);
+            x = MathF.Cos(enemyTime) * 5f + 10f;
+            z = MathF.Sin(enemyTime) * 5f;
+            y = 1f;
+            DrawEnemy((float)deltaTime, x, y, z);
+            x = 0f;
+            z = MathF.Sin(enemyTime) * 5f - 10f;
+            y = 1f;
+            DrawEnemy((float)deltaTime, x, y, z);
 
             //ImGuiNET.ImGui.ShowDemoWindow();
             ImGuiNET.ImGui.Begin("Lighting properties",
@@ -346,6 +360,23 @@ namespace GrafikaSzeminarium
             Gl.BindVertexArray(0);
         }
 
+        private static float enemyTime = 0f;
+
+        private static unsafe void DrawEnemy(float deltaTime,float x,float y,float z)
+        {
+            enemyTime += deltaTime;
+
+            var modelMatrix = Matrix4X4.CreateScale(1f) *
+                              Matrix4X4.CreateTranslation(x, y, z);
+
+            //SetMaterial(MaterialType.Emerald); // pl. zöld szín az ellenséghez
+
+            SetModelMatrix(modelMatrix);
+            Gl.BindVertexArray(enemy.Vao);
+            Gl.DrawElements(GLEnum.Triangles, enemy.IndexArrayLength, GLEnum.UnsignedInt, null);
+            Gl.BindVertexArray(0);
+        }
+
 
         private static unsafe void SetModelMatrix(Matrix4X4<float> modelMatrix)
         {
@@ -391,7 +422,7 @@ namespace GrafikaSzeminarium
 
             redball = FbxResourceReader.CreateRedBallFromFbx(Gl, path, face1Color);
 
-            path = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "table.fbx");
+            
 
             //table = FbxResourceReader.CreateRedBallFromFbx(Gl, path, face2Color);
  
@@ -402,6 +433,8 @@ namespace GrafikaSzeminarium
             table = GlCube.CreateSquare(Gl, tableColor);
 
             //glCubeRotating = GlCube.CreateCubeWithFaceColors(Gl, face1Color, face2Color, face3Color, face4Color, face5Color, face6Color);
+            path = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "bomb.fbx");
+            enemy = FbxResourceReader.CreateRedBallFromFbx(Gl, path, face2Color);
 
             skyBox = GlCube.CreateInteriorCube(Gl, "");
         }
@@ -414,6 +447,7 @@ namespace GrafikaSzeminarium
             redball.ReleaseGlObject();
             table.ReleaseGlObject();    
             skyBox.ReleaseGlObject();
+            enemy.ReleaseGlObject();
             //glCubeRotating.ReleaseGlObject();
         }
 
