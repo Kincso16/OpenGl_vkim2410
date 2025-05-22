@@ -1,4 +1,5 @@
 ﻿using Silk.NET.Maths;
+using System.Runtime.CompilerServices;
 using static GrafikaSzeminarium.CameraDescriptor;
 
 namespace GrafikaSzeminarium
@@ -17,9 +18,6 @@ namespace GrafikaSzeminarium
 
         public enum CameraMode { Default, RedBallFirstPerson, RedBallThirdPerson }
         private CameraMode currentMode = CameraMode.Default;
-
-        private Vector3D<float> redballPosition = Vector3D<float>.Zero;
-
 
         private Vector3D<float> redBallPosition = Vector3D<float>.Zero;
         private Vector3D<float> redBallForward = new(0, 0, 1); // alapértelmezett előre néző irány
@@ -48,6 +46,7 @@ namespace GrafikaSzeminarium
                 {
                     CameraMode.RedBallFirstPerson => redBallPosition + new Vector3D<float>(0, 2f, 0), // szemmagasság
                     CameraMode.RedBallThirdPerson => redBallPosition + new Vector3D<float>(0, 4f, -6f), // hátul-felül
+                    CameraMode.Default => new Vector3D<float>(0, 50f, -6f), // hátul-felül
                     _ => GetPointFromAngles(DistanceToOrigin, AngleToZYPlane, AngleToZXPlane)
                 };
             }
@@ -73,7 +72,7 @@ namespace GrafikaSzeminarium
             {
                 return currentMode switch
                 {
-                    CameraMode.RedBallFirstPerson => redBallPosition + redBallForward * 10f,
+                    CameraMode.RedBallFirstPerson => redBallPosition +redBallForward *10f,
                     CameraMode.RedBallThirdPerson => redBallPosition,
                     _ => Vector3D<float>.Zero
                 };
@@ -123,17 +122,6 @@ namespace GrafikaSzeminarium
         public void SetCameraMode(CameraMode mode)
         {
             currentMode = mode;
-        }
-
-        private Vector3D<float> GetFirstPersonPosition()
-        {
-            return redballPosition + new Vector3D<float>(0f, 2f, 0f);
-        }
-
-        private Vector3D<float> GetThirdPersonPosition()
-        {
-
-            return redballPosition + new Vector3D<float>(5f, 4f, -4f);
         }
     }
 }

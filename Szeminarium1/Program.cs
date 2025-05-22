@@ -1,10 +1,13 @@
 ﻿using GrafikaSzeminarium;
 using ImGuiNET;
+using Silk.NET.GLFW;
 using Silk.NET.Input;
+using Silk.NET.Input.Extensions;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Silk.NET.OpenGL.Extensions.ImGui;
 using Silk.NET.Windowing;
+using ErrorCode = Silk.NET.GLFW.ErrorCode;
 
 namespace GrafikaSzeminarium
 {
@@ -78,6 +81,7 @@ namespace GrafikaSzeminarium
             foreach (var keyboard in inputContext.Keyboards)
             {
                 keyboard.KeyDown += Keyboard_KeyDown;
+                keyboard.KeyUp += Keyboard_KeyUp;
             }
 
             Gl = window.CreateOpenGL();
@@ -160,7 +164,7 @@ namespace GrafikaSzeminarium
                 case Key.U:
                     cameraDescriptor.IncreaseZXAngle();
                     break;
-                case Key.D:
+                case Key.Y:
                     cameraDescriptor.DecreaseZXAngle();
                     break;
                 case Key.Space:
@@ -176,6 +180,38 @@ namespace GrafikaSzeminarium
                 case Key.F3:
                     cameraDescriptor.SetCameraMode(CameraDescriptor.CameraMode.RedBallThirdPerson);
                     break;
+
+                case Key.W:
+                    movement.Z += 1;
+                    break;
+                case Key.S:
+                    movement.Z -= 1;
+                    break;
+                case Key.A:
+                    movement.X += 1;
+                    break;
+                case Key.D:
+                    movement.X -= 1;
+                    break;
+            }
+
+        }
+        private static void Keyboard_KeyUp(IKeyboard keyboard, Key key, int arg3)
+        {
+            switch (key)
+            {
+                case Key.W:
+                    movement.Z = 0; // W lenyomva előre → felengedve: visszafelé
+                    break;
+                case Key.S:
+                    movement.Z = 0;
+                    break;
+                case Key.A:
+                    movement.X = 0;
+                    break;
+                case Key.D:
+                    movement.X = 0;
+                    break;
             }
         }
 
@@ -188,6 +224,8 @@ namespace GrafikaSzeminarium
             cubeArrangementModel.AdvanceTime(deltaTime);
 
             controller.Update((float)deltaTime);
+
+            UpdateRedBall((float)deltaTime);
         }
 
         private static unsafe void Window_Render(double deltaTime)
@@ -230,10 +268,10 @@ namespace GrafikaSzeminarium
             DrawEnemy((float)deltaTime, x, y, z);
 
             //ImGuiNET.ImGui.ShowDemoWindow();
-            ImGuiNET.ImGui.Begin("Lighting properties",
-                ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoTitleBar);
-            ImGuiNET.ImGui.SliderFloat("Shininess", ref Shininess, 1, 200);
-            ImGuiNET.ImGui.End();
+            //ImGuiNET.ImGui.Begin("Lighting properties",
+                //ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoTitleBar);
+            //ImGuiNET.ImGui.SliderFloat("Shininess", ref Shininess, 1, 200);
+            //ImGuiNET.ImGui.End();
 
 
             controller.Render();
@@ -318,45 +356,10 @@ namespace GrafikaSzeminarium
             CheckError();
         }
 
-        private static unsafe void DrawRevolvingCube()
-        {
-            // set material uniform to metal
-
-            Matrix4X4<float> diamondScale = Matrix4X4.CreateScale(1f);
-            Matrix4X4<float> rotx = Matrix4X4.CreateRotationX((float)Math.PI / 4f);
-            Matrix4X4<float> rotz = Matrix4X4.CreateRotationZ((float)Math.PI / 4f);
-            Matrix4X4<float> rotLocY = Matrix4X4.CreateRotationY((float)cubeArrangementModel.DiamondCubeAngleOwnRevolution);
-            Matrix4X4<float> trans = Matrix4X4.CreateTranslation(4f, 4f, 0f);
-            Matrix4X4<float> rotGlobY = Matrix4X4.CreateRotationY((float)cubeArrangementModel.DiamondCubeAngleRevolutionOnGlobalY);
-            Matrix4X4<float> modelMatrix = diamondScale * rotx * rotz * rotLocY * trans * rotGlobY;
-
-            SetModelMatrix(modelMatrix);
-            Gl.BindVertexArray(glCubeRotating.Vao);
-            Gl.DrawElements(GLEnum.Triangles, glCubeRotating.IndexArrayLength, GLEnum.UnsignedInt, null);
-            Gl.BindVertexArray(0);
-        }
-
-        private static unsafe void DrawPulsingTeapot()
-        {
-            // set material uniform to rubber
-
-            var modelMatrixForCenterCube = Matrix4X4.CreateScale((float)cubeArrangementModel.CenterCubeScale);
-            SetModelMatrix(modelMatrixForCenterCube);
-            Gl.BindVertexArray(teapot.Vao);
-            Gl.DrawElements(GLEnum.Triangles, teapot.IndexArrayLength, GLEnum.UnsignedInt, null);
-            Gl.BindVertexArray(0);
-
-            //var modelMatrixForTable = Matrix4X4.CreateScale(1f, 1f, 1f);
-            //SetModelMatrix(modelMatrixForTable);
-            //Gl.BindVertexArray(table.Vao);
-            //Gl.DrawElements(GLEnum.Triangles, table.IndexArrayLength, GLEnum.UnsignedInt, null);
-            //Gl.BindVertexArray(0);
-        }
-
         private static unsafe void DrawRedBall()
         {
             var modelMatrixForRedBall = Matrix4X4.CreateScale(0.5f) *
-                                        Matrix4X4.CreateTranslation(0f, 0.65f, 0f);
+                                        Matrix4X4.CreateTranslation(redBallPosition);
             SetModelMatrix(modelMatrixForRedBall);
 
             Gl.BindVertexArray(redball.Vao);
@@ -369,6 +372,24 @@ namespace GrafikaSzeminarium
             Gl.DrawElements(GLEnum.Triangles, table.IndexArrayLength, GLEnum.UnsignedInt, null);
             Gl.BindVertexArray(0);
         }
+
+        private static Vector3D<float> redBallPosition = new(0f, 0.65f, 0f); // kezdőpozíció
+        private static Vector3D<float> movement = Vector3D<float>.Zero;
+        private static void UpdateRedBall(float deltaTime)
+        {
+            
+            float speed = 5f; // egységek/másodperc
+
+            if (movement.LengthSquared > 0)
+            {
+                movement = Vector3D.Normalize(movement) * speed * deltaTime;
+                redBallPosition += movement;
+
+                // Frissítjük a kamerának is, ha követnie kell
+                cameraDescriptor.UpdateRedBallPosition(redBallPosition);
+            }
+        }
+
 
         private static float enemyTime = 0f;
 
