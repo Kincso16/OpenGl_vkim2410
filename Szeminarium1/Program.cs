@@ -8,6 +8,8 @@ using Silk.NET.OpenGL;
 using Silk.NET.OpenGL.Extensions.ImGui;
 using Silk.NET.Windowing;
 using ErrorCode = Silk.NET.GLFW.ErrorCode;
+using System.Numerics;
+
 
 namespace GrafikaSzeminarium
 {
@@ -27,7 +29,7 @@ namespace GrafikaSzeminarium
 
         private static uint program;
 
-        private static GlObject teapot;
+        //private static GlObject teapot;
 
         private static GlObject redball;
 
@@ -35,7 +37,7 @@ namespace GrafikaSzeminarium
 
         private static GlObject enemy;
 
-        private static GlCube glCubeRotating;
+        //private static GlCube glCubeRotating;
 
         private static GlCube skyBox;
 
@@ -53,6 +55,21 @@ namespace GrafikaSzeminarium
         private const string ViewPosVariableName = "viewPos";
         private const string ShininessVariableName = "shininess";
 
+        private static float enemyTime = 0f;
+        private static float enemyRadius = 0.5f; // or any size you prefer
+        private static float redBallRadius = 0.5f;
+        private static int collisionCount = 0;
+        private static Vector3D<float> redBallPosition = new(0f, 0.65f, 0f); // kezdőpozíció
+        private static Vector3D<float> movement = Vector3D<float>.Zero;
+
+
+        private static Vector3D<float>[] enemyPositions = new Vector3D<float>[]
+        {
+            new Vector3D<float>(MathF.Sin(enemyTime) * 5f, 1f, 10f),
+            new Vector3D<float>(MathF.Cos(enemyTime)* 5f + 10f, 1f, MathF.Sin(enemyTime)* 5f ),
+            new Vector3D<float>(0f, 1f, MathF.Sin(enemyTime)* 5f - 10f),
+        };
+  
         static void Main(string[] args)
         {
             WindowOptions windowOptions = WindowOptions.Default;
@@ -61,6 +78,8 @@ namespace GrafikaSzeminarium
 
             // on some systems there is no depth buffer by default, so we need to make sure one is created
             windowOptions.PreferredDepthBufferBits = 24;
+
+            InitializeCollisionFlags(); 
 
             window = Window.Create(windowOptions);
 
@@ -226,6 +245,9 @@ namespace GrafikaSzeminarium
             controller.Update((float)deltaTime);
 
             UpdateRedBall((float)deltaTime);
+            enemyTime += (float)deltaTime;
+            UpdateEnemies(enemyTime);
+            CheckCollisionsWithFlags();
         }
 
         private static unsafe void Window_Render(double deltaTime)
@@ -254,22 +276,12 @@ namespace GrafikaSzeminarium
             DrawRedBall();
 
             DrawSkyBox();
-            float x = MathF.Sin(enemyTime) * 5f;
-            float y = 1f; 
-            float z = 10f;
-            DrawEnemy((float)deltaTime,x,y,z);
-            x = MathF.Cos(enemyTime) * 5f + 10f;
-            z = MathF.Sin(enemyTime) * 5f;
-            y = 1f;
-            DrawEnemy((float)deltaTime, x, y, z);
-            x = 0f;
-            z = MathF.Sin(enemyTime) * 5f - 10f;
-            y = 1f;
-            DrawEnemy((float)deltaTime, x, y, z);
+        
+            DrawEnemies();
 
             //ImGuiNET.ImGui.ShowDemoWindow();
             //ImGuiNET.ImGui.Begin("Lighting properties",
-                //ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoTitleBar);
+            //ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoTitleBar);
             //ImGuiNET.ImGui.SliderFloat("Shininess", ref Shininess, 1, 200);
             //ImGuiNET.ImGui.End();
 
@@ -373,8 +385,7 @@ namespace GrafikaSzeminarium
             Gl.BindVertexArray(0);
         }
 
-        private static Vector3D<float> redBallPosition = new(0f, 0.65f, 0f); // kezdőpozíció
-        private static Vector3D<float> movement = Vector3D<float>.Zero;
+        
         private static void UpdateRedBall(float deltaTime)
         {
             
@@ -391,23 +402,73 @@ namespace GrafikaSzeminarium
         }
 
 
-        private static float enemyTime = 0f;
-
-        private static unsafe void DrawEnemy(float deltaTime,float x,float y,float z)
+        private static unsafe void DrawEnemies()
         {
-            enemyTime += deltaTime;
+            foreach (var enemyPos in enemyPositions)
+            {
+                var modelMatrix = Matrix4X4.CreateScale(0.5f) *
+                          Matrix4X4.CreateTranslation(enemyPos);
 
-            var modelMatrix = Matrix4X4.CreateScale(1f) *
-                              Matrix4X4.CreateTranslation(x, y, z);
+                SetModelMatrix(modelMatrix);
 
-            //SetMaterial(MaterialType.Emerald); // pl. zöld szín az ellenséghez
-
-            SetModelMatrix(modelMatrix);
-            Gl.BindVertexArray(enemy.Vao);
-            Gl.DrawElements(GLEnum.Triangles, enemy.IndexArrayLength, GLEnum.UnsignedInt, null);
-            Gl.BindVertexArray(0);
+                Gl.BindVertexArray(enemy.Vao);
+                Gl.DrawElements(GLEnum.Triangles, enemy.IndexArrayLength, GLEnum.UnsignedInt, null);
+                Gl.BindVertexArray(0);
+            }
+        }
+        private static void UpdateEnemies(float enemyTime)
+        {
+            enemyPositions[0] = new Vector3D<float>(MathF.Sin(enemyTime) * 5f, 1f, 10f);
+            enemyPositions[1] = new Vector3D<float>(MathF.Cos(enemyTime) * 5f + 10f,1f, MathF.Sin(enemyTime) * 5f);
+            enemyPositions[2] = new Vector3D<float>(0f, 1f,MathF.Sin(enemyTime) * 5f - 10f);
         }
 
+        private static bool isCurrentlyColliding = false;
+
+        private static bool IsColliding(Vector3D<float> pos1, float radius1, Vector3D<float> pos2, float radius2)
+        {
+            float distance = Vector3D.Distance(pos1, pos2);
+            return distance <= (radius1 + radius2);
+        }
+
+
+        private static void CheckCollisions()
+        {
+            for (int i = 0; i < enemyPositions.Length; i++)
+            {
+                if (IsColliding(redBallPosition, redBallRadius, enemyPositions[i], enemyRadius))
+                {
+                    collisionCount++;
+                    Console.WriteLine($"Ütközések száma: {collisionCount}");
+                }
+            }
+        }
+
+        private static bool[] hasCollidedWithEnemy;
+
+        private static void InitializeCollisionFlags()
+        {
+            hasCollidedWithEnemy = new bool[enemyPositions.Length];
+        }
+
+        private static void CheckCollisionsWithFlags()
+        {
+            for (int i = 0; i < enemyPositions.Length; i++)
+            {
+                bool isCollidingNow = IsColliding(redBallPosition, redBallRadius, enemyPositions[i], enemyRadius);
+                if (isCollidingNow && !hasCollidedWithEnemy[i])
+                {
+                    collisionCount++;
+                    hasCollidedWithEnemy[i] = true;
+                    Console.WriteLine($"Ütközések száma: {collisionCount}");
+                }
+                else if (!isCollidingNow)
+                {
+                    // Ha már nem ütközünk, reseteljük a flag-et, hogy később újra számolhassuk az ütközést
+                    hasCollidedWithEnemy[i] = false;
+                }
+            }
+        }
 
         private static unsafe void SetModelMatrix(Matrix4X4<float> modelMatrix)
         {
