@@ -166,6 +166,16 @@ namespace GrafikaSzeminarium
                 case Key.Space:
                     cubeArrangementModel.AnimationEnabeld = !cubeArrangementModel.AnimationEnabeld;
                     break;
+                // --- ÚJ: Kamera nézet váltása ---
+                case Key.F1:
+                    cameraDescriptor.SetCameraMode(CameraDescriptor.CameraMode.Default);
+                    break;
+                case Key.F2:
+                    cameraDescriptor.SetCameraMode(CameraDescriptor.CameraMode.RedBallFirstPerson);
+                    break;
+                case Key.F3:
+                    cameraDescriptor.SetCameraMode(CameraDescriptor.CameraMode.RedBallThirdPerson);
+                    break;
             }
         }
 

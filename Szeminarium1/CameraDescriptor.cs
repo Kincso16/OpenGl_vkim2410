@@ -1,4 +1,5 @@
 ﻿using Silk.NET.Maths;
+using static GrafikaSzeminarium.CameraDescriptor;
 
 namespace GrafikaSzeminarium
 {
@@ -14,14 +15,41 @@ namespace GrafikaSzeminarium
 
         private const double AngleChangeStepSize = Math.PI / 180 * 5;
 
+        public enum CameraMode { Default, RedBallFirstPerson, RedBallThirdPerson }
+        private CameraMode currentMode = CameraMode.Default;
+
+        private Vector3D<float> redballPosition = Vector3D<float>.Zero;
+
+
+        private Vector3D<float> redBallPosition = Vector3D<float>.Zero;
+        private Vector3D<float> redBallForward = new(0, 0, 1); // alapértelmezett előre néző irány
+
+
+        public void UpdateRedBallPosition(Vector3D<float> position)
+        {
+            redBallPosition = position;
+        }
+
+        public void UpdateRedBallForward(Vector3D<float> forward)
+        {
+            redBallForward = Vector3D.Normalize(forward);
+        }
+
         /// <summary>
         /// Gets the position of the camera.
         /// </summary>
+
+
         public Vector3D<float> Position
         {
             get
             {
-                return GetPointFromAngles(DistanceToOrigin, AngleToZYPlane, AngleToZXPlane);
+                return currentMode switch
+                {
+                    CameraMode.RedBallFirstPerson => redBallPosition + new Vector3D<float>(0, 2f, 0), // szemmagasság
+                    CameraMode.RedBallThirdPerson => redBallPosition + new Vector3D<float>(0, 4f, -6f), // hátul-felül
+                    _ => GetPointFromAngles(DistanceToOrigin, AngleToZYPlane, AngleToZXPlane)
+                };
             }
         }
 
@@ -43,8 +71,12 @@ namespace GrafikaSzeminarium
         {
             get
             {
-                // For the moment the camera is always pointed at the origin.
-                return Vector3D<float>.Zero;
+                return currentMode switch
+                {
+                    CameraMode.RedBallFirstPerson => redBallPosition + redBallForward * 10f,
+                    CameraMode.RedBallThirdPerson => redBallPosition,
+                    _ => Vector3D<float>.Zero
+                };
             }
         }
 
@@ -86,6 +118,22 @@ namespace GrafikaSzeminarium
             var y = distanceToOrigin * Math.Sin(angleToMinZXPlane);
 
             return new Vector3D<float>((float)x, (float)y, (float)z);
+        }
+
+        public void SetCameraMode(CameraMode mode)
+        {
+            currentMode = mode;
+        }
+
+        private Vector3D<float> GetFirstPersonPosition()
+        {
+            return redballPosition + new Vector3D<float>(0f, 2f, 0f);
+        }
+
+        private Vector3D<float> GetThirdPersonPosition()
+        {
+
+            return redballPosition + new Vector3D<float>(5f, 4f, -4f);
         }
     }
 }
