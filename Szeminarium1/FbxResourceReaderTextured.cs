@@ -27,7 +27,6 @@ namespace GrafikaSzeminarium
 
             LoadFbxData(fbxPath, glVertices, glTexCoords, glNormals, glIndices);
 
-            // Interleaved vertex data (position, normal, texcoord)
             var finalVertexData = new List<float>();
             for (int i = 0; i < glVertices.Count / 3; i++)
             {
@@ -41,7 +40,6 @@ namespace GrafikaSzeminarium
             uint offsetNormal = 3 * sizeof(float);
             uint offsetTexCoord = offsetNormal + 3 * sizeof(float);
 
-            // Upload vertex data
             uint vbo = gl.GenBuffer();
             gl.BindBuffer(GLEnum.ArrayBuffer, vbo);
             fixed (float* v = finalVertexData.ToArray())
@@ -58,7 +56,6 @@ namespace GrafikaSzeminarium
             gl.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, vertexSize, (void*)offsetTexCoord);
             gl.EnableVertexAttribArray(1);
 
-            // Upload index data
             uint ebo = gl.GenBuffer();
             gl.BindBuffer(GLEnum.ElementArrayBuffer, ebo);
             fixed (uint* i = glIndices.ToArray())
@@ -66,7 +63,6 @@ namespace GrafikaSzeminarium
                 gl.BufferData(GLEnum.ElementArrayBuffer, (nuint)(glIndices.Count * sizeof(uint)), i, GLEnum.StaticDraw);
             }
 
-            // Load texture
             uint texture = LoadTexture(gl, texturePath);
 
             gl.BindBuffer(GLEnum.ArrayBuffer, 0);

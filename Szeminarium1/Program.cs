@@ -29,7 +29,6 @@ namespace GrafikaSzeminarium
 
         private static uint program;
 
-        //private static GlObject teapot;
         private static GlObject plant;
 
         private static GlObject redball;
@@ -37,8 +36,6 @@ namespace GrafikaSzeminarium
         private static GlObject table;
 
         private static GlObject enemy;
-
-        //private static GlCube glCubeRotating;
 
         private static GlCube skyBox;
 
@@ -57,10 +54,10 @@ namespace GrafikaSzeminarium
         private const string ShininessVariableName = "shininess";
 
         private static float enemyTime = 0f;
-        private static float enemyRadius = 0.5f; // or any size you prefer
+        private static float enemyRadius = 0.5f; 
         private static float redBallRadius = 0.5f;
         private static int collisionCount = 0;
-        private static Vector3D<float> redBallPosition = new(0f, 0.65f, 0f); // kezdőpozíció
+        private static Vector3D<float> redBallPosition = new(0f, 0.65f, 0f); 
         private static Vector3D<float> movement = Vector3D<float>.Zero;
 
 
@@ -190,7 +187,6 @@ namespace GrafikaSzeminarium
                 case Key.Space:
                     cubeArrangementModel.AnimationEnabeld = !cubeArrangementModel.AnimationEnabeld;
                     break;
-                // --- ÚJ: Kamera nézet váltása ---
                 case Key.F1:
                     cameraDescriptor.SetCameraMode(CameraDescriptor.CameraMode.Default);
                     break;
@@ -221,7 +217,7 @@ namespace GrafikaSzeminarium
             switch (key)
             {
                 case Key.W:
-                    movement.Z = 0; // W lenyomva előre → felengedve: visszafelé
+                    movement.Z = 0;
                     break;
                 case Key.S:
                     movement.Z = 0;
@@ -270,10 +266,6 @@ namespace GrafikaSzeminarium
             SetViewerPosition();
             SetShininess();
 
-            //DrawPulsingTeapot();
-
-            //DrawRevolvingCube();
-
             DrawRedBall();
 
             DrawSkyBox();
@@ -285,7 +277,6 @@ namespace GrafikaSzeminarium
             ImGuiNET.ImGui.Begin("info", ImGuiWindowFlags.AlwaysAutoResize);
             ImGuiNET.ImGui.Text($"Ütközések száma: {collisionCount}");
             ImGuiNET.ImGui.End();
-
 
             controller.Render();
         }
@@ -390,14 +381,12 @@ namespace GrafikaSzeminarium
         private static void UpdateRedBall(float deltaTime)
         {
             
-            float speed = 5f; // egységek/másodperc
+            float speed = 5f;
 
             if (movement.LengthSquared > 0)
             {
                 movement = Vector3D.Normalize(movement) * speed * deltaTime;
                 redBallPosition += movement;
-
-                // Frissítjük a kamerának is, ha követnie kell
                 cameraDescriptor.UpdateRedBallPosition(redBallPosition);
             }
         }
@@ -462,12 +451,11 @@ namespace GrafikaSzeminarium
                     hasCollidedWithEnemy[i] = true;
                     if (collisionCount >= 5)
                     {
-                        Environment.Exit(0); // Azonnali kilépés a programból
+                        Environment.Exit(0);
                     }
                 }
                 else if (!isCollidingNow)
                 {
-                    // Ha már nem ütközünk, reseteljük a flag-et, hogy később újra számolhassuk az ütközést
                     hasCollidedWithEnemy[i] = false;
                 }
             }
@@ -512,17 +500,10 @@ namespace GrafikaSzeminarium
             float[] face5Color = [0.0f, 1.0f, 1.0f, 1.0f];
             float[] face6Color = [0.0f, 0.0f, 1.0f, 1.0f];
 
-            //star = ObjResourceReader.CreateTeapotWithColor(Gl, face1Color);
-            //string path = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "redball.fbx");
-
-            //redball = FbxResourceReader.CreateRedBallFromFbx(Gl, path, face1Color);
-
             string modelPath = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "redball.fbx");
             string texturePath = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "redball.jpg");
 
             redball = FbxResourceReaderTextured.CreateTexturedRedBall(Gl, modelPath, texturePath);
-
-            //table = FbxResourceReader.CreateRedBallFromFbx(Gl, path, face2Color);
 
             float[] tableColor = [System.Drawing.Color.Azure.R/256f,
                                   System.Drawing.Color.Azure.G/256f,
@@ -530,7 +511,6 @@ namespace GrafikaSzeminarium
                                   1f];
             table = GlCube.CreateSquare(Gl, tableColor);
 
-            //glCubeRotating = GlCube.CreateCubeWithFaceColors(Gl, face1Color, face2Color, face3Color, face4Color, face5Color, face6Color);
             string path = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "bomb.fbx");
             enemy = FbxResourceReader.CreateRedBallFromFbx(Gl, path, face6Color);
             path = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "plant.fbx");
@@ -538,17 +518,12 @@ namespace GrafikaSzeminarium
 
             skyBox = GlCube.CreateInteriorCube(Gl, "");
         }
-
-
-
         private static void Window_Closing()
         {
-            //teapot.ReleaseGlObject();
             redball.ReleaseGlObject();
             table.ReleaseGlObject();    
             skyBox.ReleaseGlObject();
             enemy.ReleaseGlObject();
-            //glCubeRotating.ReleaseGlObject();
         }
 
         private static unsafe void SetProjectionMatrix()
