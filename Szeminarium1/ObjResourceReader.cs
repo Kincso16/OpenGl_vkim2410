@@ -104,7 +104,7 @@ namespace GrafikaSzeminarium
         {
             objVertices = new List<float[]>();
             objFaces = new List<int[]>();
-            using (Stream objStream = typeof(ObjResourceReader).Assembly.GetManifestResourceStream("Szeminarium1.Resources.teapot.obj"))
+            using (Stream objStream = typeof(ObjResourceReader).Assembly.GetManifestResourceStream("Szeminarium1.Resources.star.obj"))
             using (StreamReader objReader = new StreamReader(objStream))
             {
                 while (!objReader.EndOfStream)
