@@ -10,21 +10,42 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\teapot.obj" />
+    <None Remove="Resources\bomb.fbx" />
+    <None Remove="Resources\plant.fbx" />
+    <None Remove="Resources\redball.fbx" />
+    <None Remove="Resources\redball.jpg" />
+    <None Remove="Resources\skybox.png" />
+    <None Remove="Shaders\FragmentShader.frag" />
+    <None Remove="Shaders\VertexShader.vert" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\teapot.obj">
+    <EmbeddedResource Include="Resources\bomb.fbx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\plant.fbx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\redball.fbx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\redball.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\skybox.png" />
+    <EmbeddedResource Include="Shaders\FragmentShader.frag" />
+    <EmbeddedResource Include="Shaders\VertexShader.vert" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Assimp" Version="3.0.0" />
+    <PackageReference Include="AssimpNet" Version="4.1.0" />
     <PackageReference Include="ImGui.NET" Version="1.91.6.1" />
     <PackageReference Include="Silk.NET" Version="2.22.0" />
     <PackageReference Include="Silk.NET.OpenGL" Version="2.22.0" />
     <PackageReference Include="Silk.NET.OpenGL.Extensions.ImGui" Version="2.22.0" />
     <PackageReference Include="Silk.NET.Windowing" Version="2.22.0" />
+    <PackageReference Include="StbImageSharp" Version="2.30.15" />
     <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.4" />
     <PackageReference Include="System.Linq" Version="4.3.0" />
   </ItemGroup>
