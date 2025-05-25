@@ -30,6 +30,7 @@ namespace GrafikaSzeminarium
         private static uint program;
 
         //private static GlObject teapot;
+        private static GlObject plant;
 
         private static GlObject redball;
 
@@ -279,11 +280,11 @@ namespace GrafikaSzeminarium
         
             DrawEnemies();
 
-            //ImGuiNET.ImGui.ShowDemoWindow();
-            //ImGuiNET.ImGui.Begin("Lighting properties",
-            //ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoTitleBar);
-            //ImGuiNET.ImGui.SliderFloat("Shininess", ref Shininess, 1, 200);
-            //ImGuiNET.ImGui.End();
+            DrawPlant();
+
+            ImGuiNET.ImGui.Begin("info", ImGuiWindowFlags.AlwaysAutoResize);
+            ImGuiNET.ImGui.Text($"Ütközések száma: {collisionCount}");
+            ImGuiNET.ImGui.End();
 
 
             controller.Render();
@@ -401,6 +402,18 @@ namespace GrafikaSzeminarium
             }
         }
 
+        private static unsafe void DrawPlant()
+        {
+            var modelMatrix = Matrix4X4.CreateScale(0.5f) *
+                  Matrix4X4.CreateRotationX(-MathF.PI / 2) *
+                  Matrix4X4.CreateTranslation(new Vector3D<float>(-10f, 0.65f, 0f));
+
+            SetModelMatrix(modelMatrix);
+            Gl.BindVertexArray(plant.Vao);
+            Gl.DrawElements(GLEnum.Triangles, plant.IndexArrayLength, GLEnum.UnsignedInt, null);
+            Gl.BindVertexArray(0);
+        }
+
 
         private static unsafe void DrawEnemies()
         {
@@ -431,19 +444,6 @@ namespace GrafikaSzeminarium
             return distance <= (radius1 + radius2);
         }
 
-
-        private static void CheckCollisions()
-        {
-            for (int i = 0; i < enemyPositions.Length; i++)
-            {
-                if (IsColliding(redBallPosition, redBallRadius, enemyPositions[i], enemyRadius))
-                {
-                    collisionCount++;
-                    Console.WriteLine($"Ütközések száma: {collisionCount}");
-                }
-            }
-        }
-
         private static bool[] hasCollidedWithEnemy;
 
         private static void InitializeCollisionFlags()
@@ -460,7 +460,10 @@ namespace GrafikaSzeminarium
                 {
                     collisionCount++;
                     hasCollidedWithEnemy[i] = true;
-                    Console.WriteLine($"Ütközések száma: {collisionCount}");
+                    if (collisionCount >= 5)
+                    {
+                        Environment.Exit(0); // Azonnali kilépés a programból
+                    }
                 }
                 else if (!isCollidingNow)
                 {
@@ -502,22 +505,25 @@ namespace GrafikaSzeminarium
         private static unsafe void SetUpObjects()
         {
 
-            float[] face1Color = [1f, 0f, 0f, 1.0f];
+            float[] face1Color = [1f, 1f, 0f, 1.0f];
             float[] face2Color = [0.0f, 1.0f, 0.0f, 1.0f];
             float[] face3Color = [0.0f, 0.0f, 1.0f, 1.0f];
             float[] face4Color = [1.0f, 0.0f, 1.0f, 1.0f];
             float[] face5Color = [0.0f, 1.0f, 1.0f, 1.0f];
-            float[] face6Color = [1.0f, 1.0f, 0.0f, 1.0f];
+            float[] face6Color = [0.0f, 0.0f, 1.0f, 1.0f];
 
-            //teapot = ObjResourceReader.CreateTeapotWithColor(Gl, face1Color);
-            string path = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "redball.fbx");
+            //star = ObjResourceReader.CreateTeapotWithColor(Gl, face1Color);
+            //string path = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "redball.fbx");
 
-            redball = FbxResourceReader.CreateRedBallFromFbx(Gl, path, face1Color);
+            //redball = FbxResourceReader.CreateRedBallFromFbx(Gl, path, face1Color);
 
-            
+            string modelPath = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "redball.fbx");
+            string texturePath = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "redball.jpg");
+
+            redball = FbxResourceReaderTextured.CreateTexturedRedBall(Gl, modelPath, texturePath);
 
             //table = FbxResourceReader.CreateRedBallFromFbx(Gl, path, face2Color);
- 
+
             float[] tableColor = [System.Drawing.Color.Azure.R/256f,
                                   System.Drawing.Color.Azure.G/256f,
                                   System.Drawing.Color.Azure.B/256f,
@@ -525,8 +531,10 @@ namespace GrafikaSzeminarium
             table = GlCube.CreateSquare(Gl, tableColor);
 
             //glCubeRotating = GlCube.CreateCubeWithFaceColors(Gl, face1Color, face2Color, face3Color, face4Color, face5Color, face6Color);
-            path = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "bomb.fbx");
-            enemy = FbxResourceReader.CreateRedBallFromFbx(Gl, path, face2Color);
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "bomb.fbx");
+            enemy = FbxResourceReader.CreateRedBallFromFbx(Gl, path, face6Color);
+            path = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "plant.fbx");
+            plant =FbxResourceReader.CreateRedBallFromFbx(Gl, path, face1Color);
 
             skyBox = GlCube.CreateInteriorCube(Gl, "");
         }
